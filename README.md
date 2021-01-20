@@ -15,4 +15,10 @@ Registration Successful!
   App ID (or Client ID) See-App-IDs-4e0d-8ce5-fa222b3dd60b
     WARNING!!! No Go! Use the manually in Azure created App Id !!!       _vvvvv_
 Refer to C:\g\Microsoft-Graph\Src\msgraph-training-uwp\ReadMe.md for the WORKING Azure steps.
-Also, the "ref not found in universe" error is fixed by installing:   PM>Install-Package Microsoft.Graph -Version 3.21.0
+Fix for the "ref not found in universe" error:   PM>Install-Package Microsoft.Graph -Version 3.21.0
+
+Fix for Contacts - access denied 
+  nogo: https://aad.portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps
+    added Contacts.Read ..Shared permissions to the app in https://aad.portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/CallAnAPI/appId/5b02c71c-515a-4a7a-9081-0fb56f25958c/isMSAApp/
+
+  WORKS: add here <data name="Scopes" xml:space="preserve"> + more from https://stackoverflow.com/questions/51760194/get-contacts-from-all-outlook-contact-folders-microsoft-graph

@@ -126,7 +126,7 @@
     <comment>No Go! Use the manually in Azure created App Id !!!</comment>
   </data>
   <data name="Scopes" xml:space="preserve">
-    <value>User.Read User.ReadBasic.All Calendars.Read</value>
+    <value>User.Read User.ReadBasic.All Calendars.Read Contacts.Read Mail.Send MailBoxSettings.ReadWrite Contacts.ReadWrite</value>
   </data>
   <data name="String1" xml:space="preserve">
     <value />
