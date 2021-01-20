@@ -21,75 +21,72 @@ using Windows.UI.Xaml.Navigation;
 
 namespace GraphTutorial
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : Page
+  /// <summary>
+  /// An empty page that can be used on its own or navigated to within a Frame.
+  /// </summary>
+  public sealed partial class MainPage : Page
+  {
+    // <ConstructorSnippet>
+    public MainPage()
     {
-        // <ConstructorSnippet>
-        public MainPage()
-        {
-            this.InitializeComponent();
+      this.InitializeComponent();
 
-            // Load OAuth settings
-            var oauthSettings = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView("OAuth");
-            var appId = oauthSettings.GetString("AppId");
-            var scopes = oauthSettings.GetString("Scopes");
+      // Load OAuth settings
+      var oauthSettings = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView("OAuth");
+      var appId = oauthSettings.GetString("AppId");
+      var scopes = oauthSettings.GetString("Scopes");
 
-            if (string.IsNullOrEmpty(appId) || string.IsNullOrEmpty(scopes))
-            {
-                Notification.Show("Could not load OAuth Settings from resource file.");
-            }
-            else
-            {
-                // Configure MSAL provider  
-                MsalProvider.ClientId = appId;
-                MsalProvider.Scopes = new ScopeSet(scopes.Split(' '));
+      if (string.IsNullOrEmpty(appId) || string.IsNullOrEmpty(scopes))
+      {
+        Notification.Show("Could not load OAuth Settings from resource file.");
+      }
+      else
+      {
+        // Configure MSAL provider  
+        MsalProvider.ClientId = appId;
+        MsalProvider.Scopes = new ScopeSet(scopes.Split(' '));
 
-                // Handle auth state change
-                ProviderManager.Instance.ProviderUpdated += ProviderUpdated;
+        // Handle auth state change
+        ProviderManager.Instance.ProviderUpdated += ProviderUpdated;
 
-                // Navigate to HomePage.xaml
-                RootFrame.Navigate(typeof(HomePage));
-            }
-        }
-        // </ConstructorSnippet>
-
-        // <ProviderUpdatedSnippet>
-        private void ProviderUpdated(object sender, ProviderUpdatedEventArgs e)
-        {
-            var globalProvider = ProviderManager.Instance.GlobalProvider;
-            SetAuthState(globalProvider != null && globalProvider.State == ProviderState.SignedIn);
-            RootFrame.Navigate(typeof(HomePage));
-        }
-        // </ProviderUpdatedSnippet>
-
-        // <SetAuthStateSnippet>
-        private void SetAuthState(bool isAuthenticated)
-        {
-            (Application.Current as App).IsAuthenticated = isAuthenticated;
-
-            // Toggle controls that require auth
-            Calendar.IsEnabled = isAuthenticated;
-        }
-        // </SetAuthStateSnippet>
-
-        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
-        {
-            var invokedItem = args.InvokedItem as string;
-
-            // <SwitchStatementSnippet>
-            switch (invokedItem.ToLower())
-            {
-                case "calendar":
-                    RootFrame.Navigate(typeof(CalendarPage));
-                    break;
-                case "home":
-                default:
-                    RootFrame.Navigate(typeof(HomePage));
-                    break;
-            }
-            // </SwitchStatementSnippet>
-        }
+        // Navigate to HomePage.xaml
+        RootFrame.Navigate(typeof(HomePage));
+      }
     }
+    // </ConstructorSnippet>
+
+    // <ProviderUpdatedSnippet>
+    private void ProviderUpdated(object sender, ProviderUpdatedEventArgs e)
+    {
+      var globalProvider = ProviderManager.Instance.GlobalProvider;
+      SetAuthState(globalProvider != null && globalProvider.State == ProviderState.SignedIn);
+      RootFrame.Navigate(typeof(HomePage));
+    }
+    // </ProviderUpdatedSnippet>
+
+    // <SetAuthStateSnippet>
+    private void SetAuthState(bool isAuthenticated)
+    {
+      (Application.Current as App).IsAuthenticated = isAuthenticated;
+
+      // Toggle controls that require auth
+      Contacts.IsEnabled =
+      Calendar.IsEnabled = isAuthenticated;
+    }
+    // </SetAuthStateSnippet>
+
+    private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+    {
+      var invokedItem = args.InvokedItem as string;
+
+      // <SwitchStatementSnippet>
+      switch (invokedItem.ToLower())
+      {
+        case "contacts": RootFrame.Navigate(typeof(ContactsPage)); break;
+        case "calendar": RootFrame.Navigate(typeof(CalendarPage)); break;
+        case "home": default: RootFrame.Navigate(typeof(HomePage)); break;
+      }
+      // </SwitchStatementSnippet>
+    }
+  }
 }

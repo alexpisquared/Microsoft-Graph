@@ -42,7 +42,12 @@
                         <FontIcon Glyph="&#xE163;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-            </NavigationView.MenuItems>
+        <NavigationViewItem Content="Contacts" x:Name="Contacts" Tag="contacts">
+          <NavigationViewItem.Icon>
+            <FontIcon Glyph="&#xE164;"/>
+          </NavigationViewItem.Icon>
+        </NavigationViewItem>
+      </NavigationView.MenuItems>
 
             <StackPanel>
                 <controls:InAppNotification x:Name="Notification" ShowDismissButton="true" />
