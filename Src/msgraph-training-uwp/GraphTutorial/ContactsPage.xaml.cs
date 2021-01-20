@@ -1,4 +1,15 @@
-﻿using Microsoft.Graph;
+﻿
+//https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/extern-alias
+//extern alias GridV1;
+//extern alias GridV2;
+//using Class1V1 = GridV1::Namespace.Class1;
+//using Class1V2 = GridV2::Namespace.Class1;
+//extern alias MSGraphBeta;
+//using GraphBeta = MSGraphBeta.Microsoft.Graph;
+
+//using Microsoft.Graph;
+//using Microsoft.Graph.Beta;
+
 using Microsoft.Toolkit.Graph.Providers;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System.Collections.Generic;
@@ -54,25 +65,28 @@ namespace GraphTutorial
         }
 
         // Use this to test the result.
-        foreach (var item in contactFolderContacts)
+        for (var i = 0; i < contactFolderContacts.Count; i++)
         {
-          Debug.WriteLine("first:" + item/*.EmailAddresses*/);
+          dynamic item = (dynamic)contactFolderContacts[i];
+          Debug.WriteLine($" *** {i,4} FileAs: {item.FileAs,-32}   {item.DisplayName,-32}   ");
         }
 
         //var c = new Microsoft.Graph.Contact();
+        // Error CS0433  The type 'Contact' exists in both 'Microsoft.Graph.Beta, Version=0.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' and 'Microsoft.Graph, Version=3.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' GraphTutorial C:\g\Microsoft - Graph\Src\msgraph - training - uwp\GraphTutorial\ContactsPage.xaml.cs  62  Active
+        //Error CS0430  The extern alias 'MSGraphBeta' was not specified in a / reference option GraphTutorial C:\g\Microsoft - Graph\Src\msgraph - training - uwp\GraphTutorial\ContactsPage.xaml.cs  2 Active
 
-        var contactList = await graphClient.Me.Contacts.Request()  // ?? IEnumerable<Contact>
-                                                                   //.Select("FileAs")
-                                                                   //.OrderBy("createdDateTime DESC")
-            .Top(7)
-            .GetAsync();
+//        var contactList = await graphClient.Me.Contacts.Request()  // ?? IEnumerable<Contact>
+//                                                                   //.Select("FileAs")
+//                                                                   //.OrderBy("createdDateTime DESC")
+//.Top(7)
+//.GetAsync();
 
-        while (contactList.NextPageRequest != null)
-        {
-          contactList = await contactList.NextPageRequest.GetAsync();
-        }
+//        while (contactList.NextPageRequest != null)
+//        {
+//          contactList = await contactList.NextPageRequest.GetAsync();
+//        }
 
-        EventList.ItemsSource = contactList.CurrentPage.ToList();
+//        EventList.ItemsSource = contactList.CurrentPage.ToList();
       }
       catch (Microsoft.Graph.ServiceException ex)
       {
