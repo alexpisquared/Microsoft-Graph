@@ -8,39 +8,19 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-  <!-- <ResourcesSnippet> -->
   <Page.Resources>
     <local:GraphDateTimeTimeZoneConverter x:Key="DateTimeTimeZoneValueConverter" />
   </Page.Resources>
-  <!-- </ResourcesSnippet> -->
-
   <Grid>
-    <controls:DataGrid x:Name="EventList" Grid.Row="1"
-                AutoGenerateColumns="False">
+    <TextBlock x:Name="tbkReport" Text="Nothing yet"/>
+    <Button Content="_Next" Click="Button_Click" VerticalAlignment="Top" HorizontalAlignment="Right" />
+    <controls:DataGrid x:Name="EventList" Grid.Row="1" AutoGenerateColumns="False" Margin="5 55 5 5">
       <controls:DataGrid.Columns>
-        <controls:DataGridTextColumn
-                        Header="Organizer"
-                        Width="SizeToCells"
-                        Binding="{Binding Organizer.EmailAddress.Name}"
-                        FontSize="20" />
-        <controls:DataGridTextColumn
-                        Header="Subject"
-                        Width="SizeToCells"
-                        Binding="{Binding Subject}"
-                        FontSize="20" />
-        <!-- <BindingSnippet> -->
-        <controls:DataGridTextColumn
-                        Header="Start"
-                        Width="SizeToCells"
-                        Binding="{Binding Start, Converter={StaticResource DateTimeTimeZoneValueConverter}}"
-                        FontSize="20" />
-        <controls:DataGridTextColumn
-                        Header="End"
-                        Width="SizeToCells"
-                        Binding="{Binding End, Converter={StaticResource DateTimeTimeZoneValueConverter}}"
-                        FontSize="20" />
-        <!-- </BindingSnippet> -->
+        <controls:DataGridTextColumn FontSize="20" Width="SizeToCells" Header="DisplayName" Binding="{Binding DisplayName}"                 />
+        <controls:DataGridTextColumn FontSize="20" Width="SizeToCells" Header="CompanyName" Binding="{Binding CompanyName}"                 />
+        <controls:DataGridTextColumn FontSize="20" Width="SizeToCells" Header="NickName"    Binding="{Binding NickName}"                 />
+        <controls:DataGridTextColumn FontSize="20" Width="Auto" Header="Emails"      Binding="{Binding EmailAddresses.Count}"                 />
+        <controls:DataGridTextColumn FontSize="20" Width="Auto" Header="Phones"      Binding="{Binding Phones.Count}"                 />
       </controls:DataGrid.Columns>
     </controls:DataGrid>
   </Grid>
