@@ -9,9 +9,9 @@ namespace GraphTutorial
 {
   public class DeviceCodeAuthProvider : IAuthenticationProvider
   {
-    private IPublicClientApplication _msalClient;
-    private string[] _scopes;
-    private IAccount _userAccount;
+    readonly IPublicClientApplication _msalClient;
+    readonly string[] _scopes;
+    IAccount _userAccount;
 
     public DeviceCodeAuthProvider(string appId, string[] scopes)
     {
@@ -31,7 +31,8 @@ namespace GraphTutorial
         try
         {
           // Invoke device code flow so user can sign-in with a browser
-          var result = await _msalClient.AcquireTokenWithDeviceCode(_scopes, callback => {
+          var result = await _msalClient.AcquireTokenWithDeviceCode(_scopes, callback =>
+          {
             Console.WriteLine(callback.Message);
             return Task.FromResult(0);
           }).ExecuteAsync();
@@ -60,12 +61,7 @@ namespace GraphTutorial
     }
 
     // This is the required function to implement IAuthenticationProvider
-    // The Graph SDK will call this function each time it makes a Graph
-    // call.
-    public async Task AuthenticateRequestAsync(HttpRequestMessage requestMessage)
-    {
-      requestMessage.Headers.Authorization =
-          new AuthenticationHeaderValue("bearer", await GetAccessToken());
-    }
+    // The Graph SDK will call this function each time it makes a Graph call.
+    public async Task AuthenticateRequestAsync(HttpRequestMessage requestMessage) => requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", await GetAccessToken());
   }
 }

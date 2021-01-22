@@ -11,7 +11,6 @@ namespace GraphTutorial
       Console.WriteLine(".NET Core Graph Tutorial\n");
 
       var appConfig = LoadAppSettings();
-
       if (appConfig == null)
       {
         Console.WriteLine("Missing or invalid appsettings.json...exiting");
@@ -19,15 +18,11 @@ namespace GraphTutorial
       }
 
       var appId = appConfig["appId"];
-      var scopesString = appConfig["scopes"];
-      var scopes = scopesString.Split(';');
+      var scopes = appConfig["scopes"].Split(';');
 
-      // Initialize the auth provider with values from appsettings.json
-      var authProvider = new DeviceCodeAuthProvider(appId, scopes);
-
-      // Request a token to sign in the user
-      var accessToken = authProvider.GetAccessToken().Result;
-
+      var authProvider = new DeviceCodeAuthProvider(appId, scopes); // Initialize the auth provider with values from appsettings.json
+      var accessToken0 = appConfig["AccessToken"];
+      var accessToken = accessToken0 ?? authProvider.GetAccessToken().Result;       // Request a token to sign in the user
 
       // Initialize Graph client
       GraphHelper.Initialize(authProvider);
@@ -69,10 +64,7 @@ namespace GraphTutorial
             break;
           case 2:
             // List the calendar
-            ListCalendarEvents(
-    user.MailboxSettings.TimeZone,
-    $"{user.MailboxSettings.DateFormat} {user.MailboxSettings.TimeFormat}"
-);
+            ListCalendarEvents(user.MailboxSettings.TimeZone, $"{user.MailboxSettings.DateFormat} {user.MailboxSettings.TimeFormat}");
             break;
           case 3:
             // Create a new event
@@ -101,16 +93,13 @@ namespace GraphTutorial
       return appConfig;
     }
 
-    static string FormatDateTimeTimeZone(
-      Microsoft.Graph.DateTimeTimeZone value,
-      string dateTimeFormat)
+    static string FormatDateTimeTimeZone(Microsoft.Graph.DateTimeTimeZone value, string dateTimeFormat)
     {
       // Parse the date/time string from Graph into a DateTime
       var dateTime = DateTime.Parse(value.DateTime);
 
       return dateTime.ToString(dateTimeFormat);
     }
-
 
     static void ListCalendarEvents(string userTimeZone, string dateTimeFormat)
     {
@@ -143,10 +132,7 @@ namespace GraphTutorial
       return (confirm.Key == ConsoleKey.Y);
     }
 
-    static string GetUserInput(
-        string fieldName,
-        bool isRequired,
-        Func<string, bool> validate)
+    static string GetUserInput(string fieldName, bool isRequired, Func<string, bool> validate)
     {
       string returnValue = null;
       do
@@ -177,7 +163,8 @@ namespace GraphTutorial
 
       // Require a subject
       var subject = GetUserInput("subject", true,
-          (input) => {
+          (input) =>
+          {
             return GetUserYesNo($"Subject: {input} - is that right?");
           });
 
@@ -190,7 +177,8 @@ namespace GraphTutorial
         do
         {
           attendee = GetUserInput("attendee", false,
-              (input) => {
+              (input) =>
+              {
                 return GetUserYesNo($"{input} - add attendee?");
               });
 
@@ -203,19 +191,21 @@ namespace GraphTutorial
       }
 
       var startString = GetUserInput("event start", true,
-          (input) => {
-          // Validate that input is a date
-          return (DateTime.TryParse(input, out var result));
+          (input) =>
+          {
+            // Validate that input is a date
+            return (DateTime.TryParse(input, out var result));
           });
 
       var start = DateTime.Parse(startString);
 
       var endString = GetUserInput("event end", true,
-          (input) => {
-          // Validate that input is a date
-          // and is later than start
-          return (DateTime.TryParse(input, out var result) &&
-              result.CompareTo(start) > 0);
+          (input) =>
+          {
+            // Validate that input is a date
+            // and is later than start
+            return (DateTime.TryParse(input, out var result) &&
+                result.CompareTo(start) > 0);
           });
 
       var end = DateTime.Parse(endString);
@@ -247,63 +237,10 @@ namespace GraphTutorial
 }
 
 /*
-.NET Core Graph Tutorial
+  ReadMe.md
+  .NET Core Graph Tutorial  from  https://docs.microsoft.com/en-us/graph/tutorials/dotnet-core
+  For the original see C:\gh\s\msgraph-training-dotnet-core\demo\GraphTutorial 
 
-To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code EHYZCBKE4 to authenticate.
-Welcome Alex Pigida!
-
-Please choose one of the following options:
-0. Exit
-1. Display access token
-2. View this week's calendar
-3. Add an event
-3
-Enter a subject: Test from Console
-Subject: Test from Console - is that right? (y/n)
-Do you want to invite attendees? (y/n)
-Enter a event start: 14:00
-Enter a event end: 15:00
-Enter a body: (ENTER to skip) event body goes here...
-Subject: Test from Console
-Attendees:
-Start: 2021-01-21 14:00:00
-End: 2021-01-21 15:00:00
-Body: event body goes here...
-Create event? (y/n)
-Event added to calendar.
-Please choose one of the following options:
-0. Exit
-1. Display access token
-2. View this week's calendar
-3. Add an event
-
-Invalid choice! Please try again.
-Please choose one of the following options:
-0. Exit
-1. Display access token
-2. View this week's calendar
-3. Add an event
-2
-Events:
-Subject: MS Graph - testing
-  Organizer: alex.pigida@outlook.com
-  Start: 2021-01-21 12:30
-  End: 2021-01-21 13:00
-Subject: Test from Console
-  Organizer: Alex Pigida
-  Start: 2021-01-21 14:00
-  End: 2021-01-21 15:00
-Please choose one of the following options:
-0. Exit
-1. Display access token
-2. View this week's calendar
-3. Add an event
-1
-Access token: EwCIA8l6BAAU6k7+XVQzkGyMv7VHB/h4cHbJYRAAAaGXGmbfVmGP4ayUUdW5Hm182VrEXaq2R74mxzKtXmNX9GDS4OmFbcq/X+XLxCa+LKjlOipJjAGUT7HTpBzqTjlBvTHNnibxTzBc/LwpoWhoJB93s8BmVz5gmQ7kiXEi/xXHn810kjA05QF+UFxeEuMD0T/Rd646jZaw2ezFkcgMA9K5V6a4DbIteQTgZSAnqYleS00GvoCInQxxFUeOkilEZnyGGu7ZqyUPn6v2U33Kp2uUC2gK/pQfIettGknOIdOi8DGrUkdsC6liW1lcST5cUaj5rCxQMFoWJjmcIngE+jaKwCdhkRAjxnDFnoY3oIwpv8aAcg+XknvnAW6eiRoDZgAACDhzYrMNUV8mWAKjKwe3IiAmzfQXsV8QVCNWMHreZv6oUblOqLXXXJRgDEtuHeR2yFxNEbA899g0LMwVa+dbY7pZGBS4QijJxq3zVV318MIrtqrOHR6V1aOKBjXK/MCb+oAcRxTkcZegx/RzH97frMXR7Mi16FSgwoudVOf1qyoCkAItrdcaOH/GsmGxEICMKu7DywhcKuinLgJdhO/y1/KzaKEHmprKVJDYEK8Q+ZodtlsoiW/wI8S77guD2EJdsIIYGJRCAQwO7jH+AAMFuGqA012FcpNmDKI033XUtNxrdt9RC3WyNG59QOKC2Bd8aWEhMs/d082w8n3wp22BAchlG79/+mAchQP5erPggLn+Pt6syl+adz+WLMIAIdQS7I/PjGHaaWRjOWgLUrmCuA3Ja+cT1qKa0/9awye1JIqoTN16D9vMLmWSkpuZPND/JHKjxrAmiKa1807bnqFRX+1lb48HrWbY8Jj4hJNI/0AdiEUvZXExnzbAosm/aDCrDWOsa9Nve4dfP17y0nutXWSUoLYC6lYI/sgDNEJemTB0DDlElSHWcVrC17aFC3NmnOAMIwAKxzZGR12ecf210bJLbFmNYJHrj1qlHzmwKeRkIgegN9FwbTFxphob7d/a6TlKfOP89i+jXwQjM9ATw1SjGTB/MVstT96KPyCEXlWb2Y5T9rvFzKzlYplS4AhACUKgaCgbHWlpxR+Qc/ljjifqGEv76QKjZjaCIJgHK+KqKbz1a34r/CzFembkAjbhBexEedVXq8KZHmt34DD8HuljmJdJKDqQlPsu45fKQLw5immNAg==
-
-Please choose one of the following options:
-0. Exit
-1. Display access token
-2. View this week's calendar
-3. Add an event
+  
+  OAuth2: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-device-code
 */

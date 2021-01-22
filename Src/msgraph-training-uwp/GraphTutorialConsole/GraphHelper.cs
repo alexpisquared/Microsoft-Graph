@@ -8,11 +8,8 @@ namespace GraphTutorial
 {
   public class GraphHelper
   {
-    private static GraphServiceClient graphClient;
-    public static void Initialize(IAuthenticationProvider authProvider)
-    {
-      graphClient = new GraphServiceClient(authProvider);
-    }
+    static GraphServiceClient graphClient;
+    public static void Initialize(IAuthenticationProvider authProvider) => graphClient = new GraphServiceClient(authProvider);
 
     public static async Task<User> GetMeAsync()
     {
@@ -21,7 +18,8 @@ namespace GraphTutorial
         // GET /me
         return await graphClient.Me
             .Request()
-            .Select(u => new {
+            .Select(u => new
+            {
               u.DisplayName,
               u.MailboxSettings
             })
@@ -79,16 +77,16 @@ namespace GraphTutorial
       }
     }
 
-    private static DateTime GetUtcStartOfWeekInTimeZone(DateTime today, string timeZoneId)
+    static DateTime GetUtcStartOfWeekInTimeZone(DateTime today, string timeZoneId)
     {
       // Time zone returned by Graph could be Windows or IANA style
       // .NET Core's FindSystemTimeZoneById needs IANA on Linux/MacOS,
       // and needs Windows style on Windows.
       // TimeZoneConverter can handle this for us
-      TimeZoneInfo userTimeZone = TZConvert.GetTimeZoneInfo(timeZoneId);
+      var userTimeZone = TZConvert.GetTimeZoneInfo(timeZoneId);
 
       // Assumes Sunday as first day of week
-      int diff = System.DayOfWeek.Sunday - today.DayOfWeek;
+      var diff = System.DayOfWeek.Sunday - today.DayOfWeek;
 
       // create date as unspecified kind
       var unspecifiedStart = DateTime.SpecifyKind(today.AddDays(diff), DateTimeKind.Unspecified);

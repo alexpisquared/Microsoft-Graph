@@ -56,7 +56,7 @@ namespace GraphTutorial
     // </ConstructorSnippet>
 
     // <ProviderUpdatedSnippet>
-    private void ProviderUpdated(object sender, ProviderUpdatedEventArgs e)
+    void ProviderUpdated(object sender, ProviderUpdatedEventArgs e)
     {
       var globalProvider = ProviderManager.Instance.GlobalProvider;
       SetAuthState(globalProvider != null && globalProvider.State == ProviderState.SignedIn);
@@ -65,7 +65,7 @@ namespace GraphTutorial
     // </ProviderUpdatedSnippet>
 
     // <SetAuthStateSnippet>
-    private void SetAuthState(bool isAuthenticated)
+    void SetAuthState(bool isAuthenticated)
     {
       (Application.Current as App).IsAuthenticated = isAuthenticated;
 
@@ -75,7 +75,7 @@ namespace GraphTutorial
     }
     // </SetAuthStateSnippet>
 
-    private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+    void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
       var invokedItem = args.InvokedItem as string;
 

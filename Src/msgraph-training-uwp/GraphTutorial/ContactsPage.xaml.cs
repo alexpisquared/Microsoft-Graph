@@ -24,7 +24,7 @@ namespace GraphTutorial
   public sealed partial class ContactsPage : Page
   {
     public ContactsPage() => InitializeComponent();
-    private void ShowNotification(string message)
+    void ShowNotification(string message)
     {
       var mainPage = (Window.Current.Content as Frame).Content as MainPage;           // Get the main page that contains the InAppNotification
       var notification = mainPage.FindName("Notification") as InAppNotification; // Get the notification control
@@ -87,7 +87,7 @@ namespace GraphTutorial
       base.OnNavigatedTo(e);
     }
 
-    private void Button_Click(object sender, RoutedEventArgs e)
+    void Button_Click(object sender, RoutedEventArgs e)
     {
       //while (defoltContacts.NextPageRequest != null)
       //{
