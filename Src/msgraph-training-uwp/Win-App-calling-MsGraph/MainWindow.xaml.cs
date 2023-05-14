@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows;
-
+using Microsoft.Graph;
 using Microsoft.Identity.Client;
 namespace Win_App_calling_MsGraph;
 public partial class MainWindow : Window
@@ -15,7 +15,7 @@ public partial class MainWindow : Window
   readonly string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
 
   //Set the scope for API call to user.read
-  readonly string[] scopes = new string[] { "user.read"/*, "drive"*/ };
+  readonly string[] scopes = new string[] { "user.read", /*"User.Read","MailboxSettings.Read","Calendars.ReadWrite",*/"Files.Read" };
 
   public MainWindow() => InitializeComponent();
 
@@ -44,7 +44,7 @@ public partial class MainWindow : Window
       {
         authResult = await app.AcquireTokenInteractive(scopes)
             .WithAccount(accounts.FirstOrDefault())
-            .WithPrompt(Prompt.SelectAccount)
+            .WithPrompt(Microsoft.Identity.Client.Prompt.SelectAccount)
             .ExecuteAsync();
       }
       catch (MsalException msalex)
@@ -92,13 +92,12 @@ public partial class MainWindow : Window
     var me = await _graphServiceClient.Me.Request().GetAsync();
     try
     {
-      Microsoft.Graph.DriveItem folder;
-      folder = await _graphServiceClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
-      folder = await _graphServiceClient.Drive.Root.ItemWithPath("/" + "path").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      Microsoft.Graph.DriveItem folder = await _graphServiceClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      Microsoft.Graph.DriveItem folde2 = await _graphServiceClient.Drive.Root.ItemWithPath("/" + "Pictures").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
 
-      dynamic iems = await _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
-      var pic0 = iems.Items[12];
-      var pic1 = pic0.Name;
+      IDriveItemChildrenCollectionPage iems = await _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
+      var pic0 = iems.ToList()[12];
+      //var pic1 = pic0.Name;
 
       var profilePhoto = await _graphServiceClient.Me.Photo.Content.Request().GetAsync();
       if (profilePhoto != null)
