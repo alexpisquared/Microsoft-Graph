@@ -38,5 +38,6 @@ OAuth2: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth
       Make this change for me
 ##### Dead End: AD only?!?!?
 
-#### Option 2: Advanced mode
+#### Option 2: Advanced mode  <== SUCCESS!!!  
+
 
