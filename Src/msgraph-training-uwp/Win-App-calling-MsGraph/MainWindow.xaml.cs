@@ -1,40 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Identity.Client;
 
+using Microsoft.Identity.Client;
 namespace Win_App_calling_MsGraph;
 public partial class MainWindow : Window
 {
   //Set the API Endpoint to Graph 'me' endpoint
-  string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
+  readonly string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
 
   //Set the scope for API call to user.read
-  string[] scopes = new string[] { "user.read" };
+  readonly string[] scopes = new string[] { "user.read"/*, "drive"*/ };
 
-
-  public MainWindow()
-  {
-    InitializeComponent();
-  }
+  public MainWindow() => InitializeComponent();
 
   /// <summary>
   /// Call AcquireToken - to acquire a token requiring user to sign-in
   /// </summary>
   private async void CallGraphButton_Click(object sender, RoutedEventArgs e)
   {
-    AuthenticationResult authResult = null;
+    AuthenticationResult? authResult = null;
     var app = App.PublicClientApp;
     ResultText.Text = string.Empty;
     TokenInfoText.Text = string.Empty;
@@ -44,14 +34,11 @@ public partial class MainWindow : Window
 
     try
     {
-      authResult = await app.AcquireTokenSilent(scopes, firstAccount)
-          .ExecuteAsync();
+      authResult = await app.AcquireTokenSilent(scopes, firstAccount).ExecuteAsync();
     }
     catch (MsalUiRequiredException ex)
     {
-      // A MsalUiRequiredException happened on AcquireTokenSilent.
-      // This indicates you need to call AcquireTokenInteractive to acquire a token
-      System.Diagnostics.Debug.WriteLine($"MsalUiRequiredException: {ex.Message}");
+      System.Diagnostics.Debug.WriteLine($"MsalUiRequiredException: {ex.Message}"); // A MsalUiRequiredException happened on AcquireTokenSilent. This indicates you need to call AcquireTokenInteractive to acquire a token
 
       try
       {
@@ -75,9 +62,59 @@ public partial class MainWindow : Window
     {
       ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, authResult.AccessToken);
       DisplayBasicTokenInfo(authResult);
-      this.SignOutButton.Visibility = Visibility.Visible;
+      SignOutButton.Visibility = Visibility.Visible;
+    }
+    else
+    {
+      return;
+    }
+
+
+    var httpClient = new HttpClient();
+    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResult.AccessToken);
+    var rr  = await httpClient.GetAsync(graphAPIEndpoint); // Call the web API.
+
+
+    var _graphServiceClient = new Microsoft.Graph.GraphServiceClient(new Microsoft.Graph.DelegateAuthenticationProvider(async (requestMessage) =>
+    {
+      var token = authResult.AccessToken;
+      requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+      await Task.CompletedTask;
+    }));
+
+    var me = await _graphServiceClient.Me.Request().GetAsync();
+    try
+    {
+      Microsoft.Graph.DriveItem folder;
+      folder = await _graphServiceClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      folder = await _graphServiceClient.Drive.Root.ItemWithPath("/" + "path").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+
+      dynamic iems = await _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
+      var pic0 = iems.Items[12];
+      var pic1 = pic0.Name;
+
+      var profilePhoto = await _graphServiceClient.Me.Photo.Content.Request().GetAsync();
+      if (profilePhoto != null)
+      {
+        var ms = new MemoryStream();
+        profilePhoto.CopyTo(ms);
+        var buffer = ms.ToArray();
+        var result = Convert.ToBase64String(buffer);
+        var imgDataURL = string.Format("data:image/png;base64, {0}", result);
+        //ViewBag.ImageData = imgDataURL;
+      }
+      else
+      {
+        //ViewBag.ImageData = "";
+      }
+    }
+    catch (Exception ex)
+    {
+      Trace.WriteLine($"\n*** Error getting events: {ex.Message}");
     }
   }
+
+  private Task<string> GetAccessTokenAsync() => throw new NotImplementedException();
 
   /// <summary>
   /// Perform an HTTP GET request to a URL using an HTTP Authorization header
@@ -116,9 +153,9 @@ public partial class MainWindow : Window
       try
       {
         await App.PublicClientApp.RemoveAsync(accounts.FirstOrDefault());
-        this.ResultText.Text = "User has signed-out";
-        this.CallGraphButton.Visibility = Visibility.Visible;
-        this.SignOutButton.Visibility = Visibility.Collapsed;
+        ResultText.Text = "User has signed-out";
+        CallGraphButton.Visibility = Visibility.Visible;
+        SignOutButton.Visibility = Visibility.Collapsed;
       }
       catch (MsalException ex)
       {

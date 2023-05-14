@@ -9,15 +9,15 @@ namespace GraphTutorialConsole;
 
 public class GraphHelper
 {
-  static GraphServiceClient graphServiceClient;
-  public static void Initialize(IAuthenticationProvider authProvider) => graphServiceClient = new GraphServiceClient(authProvider);
+  static GraphServiceClient _graphServiceClient;
+  public static void Initialize(IAuthenticationProvider authProvider) => _graphServiceClient = new GraphServiceClient(authProvider);
 
   public static async Task<User> GetMeAsync()
   {
     try
     {
       // GET /me
-      return await graphServiceClient.Me
+      return await _graphServiceClient.Me
           .Request()
           .Select(u => new
           {
@@ -47,7 +47,7 @@ public class GraphHelper
 
     try
     {
-      var events = await graphServiceClient.Me
+      var events = await _graphServiceClient.Me
           .CalendarView
           .Request(viewOptions)
           // Send user time zone in request so date/time in
@@ -79,12 +79,11 @@ public class GraphHelper
   {
     try
     {
-      var items = await graphServiceClient.Me.Drive.Root.Children.Request().GetAsync();
+      dynamic iems = await _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
+      var pic0 = iems.Items[12];
+      var pic1 = pic0.Name;
 
-      dynamic iems = await graphServiceClient.Me.Drive.Root.Children.Request().GetAsync();
-      var pics = iems.Items[12].Name;
-
-      var profilePhoto = await graphServiceClient.Me.Photo.Content.Request().GetAsync();
+      var profilePhoto = await _graphServiceClient.Me.Photo.Content.Request().GetAsync();
       if (profilePhoto != null)
       {
         var ms = new MemoryStream();
@@ -126,13 +125,7 @@ public class GraphHelper
     return TimeZoneInfo.ConvertTimeToUtc(unspecifiedStart, userTimeZone);
   }
 
-  public static async Task CreateEvent(
-    string timeZone,
-    string subject,
-    DateTime start,
-    DateTime end,
-    List<string> attendees,
-    string body = null)
+  public static async Task CreateEvent(string timeZone, string subject, DateTime start, DateTime end, List<string> attendees, string body = null)
   {
     // Create a new Event object with required
     // values
@@ -183,7 +176,7 @@ public class GraphHelper
     try
     {
       // POST /me/events
-      _ = await graphServiceClient.Me
+      _ = await _graphServiceClient.Me
           .Events
           .Request()
           .AddAsync(newEvent);

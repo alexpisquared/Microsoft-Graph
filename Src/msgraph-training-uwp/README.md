@@ -40,4 +40,11 @@ OAuth2: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth
 
 #### Option 2: Advanced mode  <== SUCCESS!!!  
 
+more samples: https://learn.microsoft.com/en-us/azure/active-directory/develop/sample-v2-code#desktop
 
+??? 
+Sample code of how to Use GraphServiceClient with acquire a token using AuthenticationResult
+
+Also See:
+  working UWP sample C:\gh\s\onedrive-sample-photobrowser-uwp\OneDrivePhotoBrowser\
+  WinForms: https://github.com/OneDrive/onedrive-sample-apibrowser-dotnet
