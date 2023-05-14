@@ -1,41 +1,42 @@
-# How to run the completed project
+# Microsoft-Graph ... Dabbling into... let's use for onedrive file access for the pic viewer.
 
-## Prerequisites
+## UWP  GraphTutorial
 
-To run the completed project in this folder, you need the following:
+https://developer.microsoft.com/en-us/graph/quick-start?appID=c0e92fd4-e675-4e0d-8ce5-fa222b3dd60b&appName=My%20UWP%20App&redirectUrl=http://localhost:8000&platform=option-windowsuniversal
 
-- [Visual Studio](https://visualstudio.microsoft.com/vs/) installed on your development machine. If you do not have Visual Studio, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio 2019 version 16.5.0. The steps in this guide may work with other versions, but that has not been tested.)
-- Either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account.
+UWP selected
+Registration Successful!
+  Thanks for registering your app. We've configured the app ID (also called client ID) and redirect URI in the code sample.
+  App Name              My UWP App
+  App ID (or Client ID) See-App-IDs-4e0d-8ce5-fa222b3dd60b
+    WARNING!!! No Go! Use the manually in Azure created App Id !!!       _vvvvv_
+Refer to C:\g\Microsoft-Graph\Src\msgraph-training-uwp\ReadMe.md for the WORKING Azure steps.
+Fix for the "ref not found in universe" error:   PM>Install-Package Microsoft.Graph -Version 3.21.0
 
-If you don't have a Microsoft account, there are a couple of options to get a free account:
+### Fix for Contacts - access denied 
+  nogo: https://aad.portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps
+    added Contacts.Read ..Shared permissions to the app in https://aad.portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/CallAnAPI/appId/5b02c71c-515a-4a7a-9081-0fb56f25958c/isMSAApp/
 
-- You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).
-- You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
-
-## Register a native application with the Azure Active Directory admin center
-
-1. Open a browser and navigate to the [Azure Active Directory admin center](https://aad.portal.azure.com) and login using a **personal account** (aka: Microsoft Account) or **Work or School Account**.
-
-1. Select **Azure Active Directory** in the left-hand navigation, then select **App registrations** under **Manage**.
-
-
-1. Select **New registration**. On the **Register an application** page, set the values as follows.
-
-    - Set **Name** to `UWP Graph Tutorial`.
-    - Set **Supported account types** to **Accounts in any organizational directory and personal Microsoft accounts**.
-    - Under **Redirect URI**, change the dropdown to **Public client (mobile & desktop)**, and set the value to `https://login.microsoftonline.com/common/oauth2/nativeclient`.
+  WORKS: add here <data name="Scopes" xml:space="preserve"> + more from https://stackoverflow.com/questions/51760194/get-contacts-from-all-outlook-contact-folders-microsoft-graph
 
 
-1. Choose **Register**. On the **UWP Graph Tutorial** page, copy the value of the **Application (client) ID** and save it, you will need it in the next step.
+## Console  GraphTutorialConsole:   reviwed in May 2023:  all works, too tedious: must find the way to not login evey time.
+.NET Core Graph Tutorial  from  https://docs.microsoft.com/en-us/graph/tutorials/dotnet-core
+For the original see C:\gh\s\msgraph-training-dotnet-core\demo\GraphTutorial 
+
+OAuth2: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-device-code
+
+### also see https://developer.microsoft.com/en-us/graph/graph-explorer
 
 
-## Configure the sample
+## Core  Win-App-calling-MsGraph  from  https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-windows-desktop
+### .Net4 -> .Net7
+#### Option 1: Express mode
+  Step 1: https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/applicationsListBlade/quickStartType/WinDesktopQuickstartPage/sourceType/docs
+  Step 2: Register 
+    https://registeredapps.hosting.portal.azure.net/registeredapps/Content/1.0.2309.187/Quickstarts/en/WinDesktopQuickstartPage.html?clientOptimizations=undefined&l=en.en-us&trustedAuthority=https%3A%2F%2Fportal.azure.com&shellVersion=undefined#how-the-sample-works
+      Make this change for me
+##### Dead End: AD only?!?!?
 
-1. Rename the `OAuth.resw.example` file to `OAuth.resw`.
-1. Open `graph-tutorial.sln` in Visual Studio.
-1. Edit the `OAuth.resw` file in visual studio.Replace `YOUR_APP_ID_HERE` with the **Application Id** you got from the App Registration Portal.
-1. In Solution Explorer, right-click the **graph-tutorial** solution and choose **Restore NuGet Packages**.
+#### Option 2: Advanced mode
 
-## Run the sample
-
-In Visual Studio, press **F5** or choose **Debug > Start Debugging**.
