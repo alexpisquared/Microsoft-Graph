@@ -58,23 +58,30 @@ public partial class MainWindow : Window
       return;
     }
 
-    if (authResult != null)
+    if (authResult == null)
     {
-      ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, authResult.AccessToken);
-      DisplayBasicTokenInfo(authResult);
-      SignOutButton.Visibility = Visibility.Visible;
-    }
-    else
-    {
+      ResultText.Text = $"Error Acquiring Token";
       return;
     }
 
+    ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, authResult.AccessToken);
+    DisplayBasicTokenInfo(authResult);
+    SignOutButton.Visibility = Visibility.Visible;
 
+    await TrySimlplestTest(authResult);
+
+    await TryOneDriveMeThingy(authResult);
+  }
+
+  private async Task TrySimlplestTest(AuthenticationResult? authResult)
+  {
     var httpClient = new HttpClient();
     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResult.AccessToken);
-    var rr  = await httpClient.GetAsync(graphAPIEndpoint); // Call the web API.
+    ResultText.Text = (await httpClient.GetAsync(graphAPIEndpoint)).ToString(); // Call the web API.
+  }
 
-
+  async Task TryOneDriveMeThingy(AuthenticationResult? authResult)
+  {
     var _graphServiceClient = new Microsoft.Graph.GraphServiceClient(new Microsoft.Graph.DelegateAuthenticationProvider(async (requestMessage) =>
     {
       var token = authResult.AccessToken;
@@ -111,6 +118,7 @@ public partial class MainWindow : Window
     catch (Exception ex)
     {
       Trace.WriteLine($"\n*** Error getting events: {ex.Message}");
+      ResultText.Text = ex.Message;
     }
   }
 
