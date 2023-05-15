@@ -11,11 +11,8 @@ using Microsoft.Identity.Client;
 namespace Win_App_calling_MsGraph;
 public partial class MainWindow : Window
 {
-  //Set the API Endpoint to Graph 'me' endpoint
-  readonly string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
-
-  //Set the scope for API call to user.read
-  readonly string[] scopes = new string[] { "user.read", /*"User.Read","MailboxSettings.Read","Calendars.ReadWrite",*/"Files.Read" };
+  readonly string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";  //Set the API Endpoint to Graph 'me' endpoint
+  readonly string[] scopes = new string[] { "user.read", /*"User.Read","MailboxSettings.Read","Calendars.ReadWrite",*/"Files.Read" }; // from C:\gh\s\onedrive-sample-photobrowser-uwp\OneDrivePhotoBrowser\AccountSelection.xaml.cs:  "onedrive.readonly", "wl.signin", "offline_access" };
 
   public MainWindow() => InitializeComponent();
 

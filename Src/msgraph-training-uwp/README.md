@@ -47,4 +47,11 @@ Sample code of how to Use GraphServiceClient with acquire a token using Authenti
 
 Also See:
   working UWP sample C:\gh\s\onedrive-sample-photobrowser-uwp\OneDrivePhotoBrowser\
-  WinForms: https://github.com/OneDrive/onedrive-sample-apibrowser-dotnet
+                     C:\gh\s\onedrive-sample-photobrowser-uwp\OneDrivePhotoBrowser\Controllers\ItemsController.cs   <==  1dr navigation samples
+  !WORKG WinForms:   https://github.com/OneDrive/onedrive-sample-apibrowser-dotnet
+                     C:\gh\s\onedrive-sample-apibrowser-dotnet\OneDriveApiBrowser\FormBrowser.cs
+                     ^ 1dr navigation samples
+
+## Next:
+  cache token to FS
+
