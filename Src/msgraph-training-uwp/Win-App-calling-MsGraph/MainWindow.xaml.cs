@@ -18,17 +18,15 @@ public partial class MainWindow : Window
 
   async void CallGraphButton_Click(object sender, RoutedEventArgs e)
   {
-    AuthenticationResult? authResult = null;
-    var app = App.PublicClientApp;
-    ResultText.Text = string.Empty;
-    TokenInfoText.Text = string.Empty;
+    ResultText.Text = "";
+    TokenInfoText.Text = "";
 
-    var accounts = await app.GetAccountsAsync();
-    var firstAccount = accounts.FirstOrDefault();
+    var accounts = await App.PublicClientApp.GetAccountsAsync();
+    AuthenticationResult? authResult = null;
 
     try
     {
-      authResult = await app.AcquireTokenSilent(scopes, firstAccount).ExecuteAsync();
+      authResult = await App.PublicClientApp.AcquireTokenSilent(scopes, accounts.FirstOrDefault()).ExecuteAsync();
     }
     catch (MsalUiRequiredException ex)
     {
@@ -36,49 +34,45 @@ public partial class MainWindow : Window
 
       try
       {
-        authResult = await app.AcquireTokenInteractive(scopes)
+        authResult = await App.PublicClientApp.AcquireTokenInteractive(scopes)
             .WithAccount(accounts.FirstOrDefault())
             .WithPrompt(Microsoft.Identity.Client.Prompt.SelectAccount)
             .ExecuteAsync();
       }
       catch (MsalException msalex)
       {
-        ResultText.Text = $"Error Acquiring Token:{System.Environment.NewLine}{msalex}";
+        ResultText.Text = $"Error Acquiring Token:   {msalex}";
       }
     }
     catch (Exception ex)
     {
-      ResultText.Text = $"Error Acquiring Token Silently:{System.Environment.NewLine}{ex}";
-      return;
+      ResultText.Text = $"Error Acquiring Token Silently:   {ex}";
+      throw;
     }
 
-    if (authResult == null)
-    {
-      ResultText.Text = $"Error Acquiring Token";
-      return;
-    }
+    ArgumentNullException.ThrowIfNull(authResult);
 
-    ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, authResult.AccessToken);
-    DisplayBasicTokenInfo(authResult);
+    string token = authResult.AccessToken;
+
+    ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, token);
+    TokenInfoText.Text = $"Username: {authResult.Account.Username} \n Token Expires: {authResult.ExpiresOn.ToLocalTime()}";
     SignOutButton.Visibility = Visibility.Visible;
 
-    await TrySimlplestTest(authResult);
-
-    await TryOneDriveMeThingy(authResult);
+    await TrySimlplestTest(token);
+    await TryOneDriveMeThingy(token);
   }
 
-  async Task TrySimlplestTest(AuthenticationResult? authResult)
+  async Task TrySimlplestTest(string token)
   {
     var httpClient = new HttpClient();
-    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResult?.AccessToken);
+    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     ResultText.Text = (await httpClient.GetAsync(graphAPIEndpoint)).ToString(); // Call the web API.
   }
 
-  async Task TryOneDriveMeThingy(AuthenticationResult? authResult)
+  async Task TryOneDriveMeThingy(string token)
   {
-    var _graphServiceClient = new Microsoft.Graph.GraphServiceClient(new Microsoft.Graph.DelegateAuthenticationProvider(async (requestMessage) =>
+    var _graphServiceClient = new GraphServiceClient(new DelegateAuthenticationProvider(async (requestMessage) =>
     {
-      var token = authResult.AccessToken;
       requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
       await Task.CompletedTask;
     }));
@@ -86,8 +80,8 @@ public partial class MainWindow : Window
     var me = await _graphServiceClient.Me.Request().GetAsync();
     try
     {
-      Microsoft.Graph.DriveItem folder = await _graphServiceClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
-      Microsoft.Graph.DriveItem folde2 = await _graphServiceClient.Drive.Root.ItemWithPath("/" + "Pictures").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      DriveItem folder = await _graphServiceClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      DriveItem folde2 = await _graphServiceClient.Drive.Root.ItemWithPath("/" + "Pictures").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
 
       IDriveItemChildrenCollectionPage iems = await _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
       var pic0 = iems.ToList()[12];
@@ -165,16 +159,4 @@ public partial class MainWindow : Window
     }
   }
 
-  /// <summary>
-  /// Display basic information contained in the token
-  /// </summary>
-  void DisplayBasicTokenInfo(AuthenticationResult authResult)
-  {
-    TokenInfoText.Text = "";
-    if (authResult != null)
-    {
-      TokenInfoText.Text += $"Username: {authResult.Account.Username}" + Environment.NewLine;
-      TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
-    }
-  }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Azure.Core;
+﻿using Azure.Core;
 using Azure.Identity;
 using Microsoft.Graph;
 using Microsoft.Graph.Me.SendMail;
@@ -121,7 +116,7 @@ internal class GraphHelper
   }
   // This function serves as a playground for testing Graph snippets
   // or other code
-  public async static Task MakeGraphCallAsync()
+  public static async Task MakeGraphCallAsync()
   {
     // INSERT YOUR CODE HERE
   }
