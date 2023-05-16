@@ -33,7 +33,7 @@ namespace GraphTutorial
             this.InitializeComponent();
         }
 
-        private void ShowNotification(string message)
+        void ShowNotification(string message)
         {
             // Get the main page that contains the InAppNotification
             var mainPage = (Window.Current.Content as Frame).Content as MainPage;

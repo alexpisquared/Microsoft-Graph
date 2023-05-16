@@ -16,10 +16,7 @@ public partial class MainWindow : Window
 
   public MainWindow() => InitializeComponent();
 
-  /// <summary>
-  /// Call AcquireToken - to acquire a token requiring user to sign-in
-  /// </summary>
-  private async void CallGraphButton_Click(object sender, RoutedEventArgs e)
+  async void CallGraphButton_Click(object sender, RoutedEventArgs e)
   {
     AuthenticationResult? authResult = null;
     var app = App.PublicClientApp;
@@ -35,7 +32,7 @@ public partial class MainWindow : Window
     }
     catch (MsalUiRequiredException ex)
     {
-      System.Diagnostics.Debug.WriteLine($"MsalUiRequiredException: {ex.Message}"); // A MsalUiRequiredException happened on AcquireTokenSilent. This indicates you need to call AcquireTokenInteractive to acquire a token
+      Debug.WriteLine($"MsalUiRequiredException: {ex.Message}"); // A MsalUiRequiredException happened on AcquireTokenSilent. This indicates you need to call AcquireTokenInteractive to acquire a token
 
       try
       {
@@ -70,10 +67,10 @@ public partial class MainWindow : Window
     await TryOneDriveMeThingy(authResult);
   }
 
-  private async Task TrySimlplestTest(AuthenticationResult? authResult)
+  async Task TrySimlplestTest(AuthenticationResult? authResult)
   {
     var httpClient = new HttpClient();
-    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResult.AccessToken);
+    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResult?.AccessToken);
     ResultText.Text = (await httpClient.GetAsync(graphAPIEndpoint)).ToString(); // Call the web API.
   }
 
@@ -118,7 +115,7 @@ public partial class MainWindow : Window
     }
   }
 
-  private Task<string> GetAccessTokenAsync() => throw new NotImplementedException();
+  Task<string> GetAccessTokenAsync() => throw new NotImplementedException();
 
   /// <summary>
   /// Perform an HTTP GET request to a URL using an HTTP Authorization header
@@ -148,7 +145,7 @@ public partial class MainWindow : Window
   /// <summary>
   /// Sign out the current user
   /// </summary>
-  private async void SignOutButton_Click(object sender, RoutedEventArgs e)
+  async void SignOutButton_Click(object sender, RoutedEventArgs e)
   {
     var accounts = await App.PublicClientApp.GetAccountsAsync();
 
@@ -171,7 +168,7 @@ public partial class MainWindow : Window
   /// <summary>
   /// Display basic information contained in the token
   /// </summary>
-  private void DisplayBasicTokenInfo(AuthenticationResult authResult)
+  void DisplayBasicTokenInfo(AuthenticationResult authResult)
   {
     TokenInfoText.Text = "";
     if (authResult != null)

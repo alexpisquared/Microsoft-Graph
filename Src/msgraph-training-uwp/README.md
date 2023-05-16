@@ -23,10 +23,13 @@ Fix for the "ref not found in universe" error:   PM>Install-Package Microsoft.Gr
 ## Console  GraphTutorialConsole:   reviwed in May 2023:  all works, too tedious: must find the way to not login evey time.
 .NET Core Graph Tutorial  from  https://docs.microsoft.com/en-us/graph/tutorials/dotnet-core
 For the original see C:\gh\s\msgraph-training-dotnet-core\demo\GraphTutorial 
+...all messed up ... ==> 
+## Console  GraphTutorialConsole2:  redoing steps from  https://docs.microsoft.com/en-us/graph/tutorials/dotnet-core  May 15, 2023
 
-OAuth2: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-device-code
+### also see 
+    https://developer.microsoft.com/en-us/graph/graph-explorer
+    OAuth2: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-device-code
 
-### also see https://developer.microsoft.com/en-us/graph/graph-explorer
 
 
 ## Core  Win-App-calling-MsGraph  from  https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-windows-desktop

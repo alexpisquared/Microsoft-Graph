@@ -11,13 +11,7 @@ class Program
   {
     Console.WriteLine(".NET Core Graph Tutorial\n");
 
-    var appConfig = LoadAppSettings();
-    if (appConfig == null)
-    {
-      Console.WriteLine("Missing or invalid appsettings.json...exiting");
-      return;
-    }
-
+    var appConfig = new ConfigurationBuilder().AddUserSecrets<Program>().Build(); //tu: secrets by the book. LoadAppSettings();
     var appId = appConfig["appId"];
     var scopes = appConfig["scopes"].Split(';');
 
@@ -25,10 +19,8 @@ class Program
     var accessToken0 = appConfig["AccessToken"];
     var accessToken = accessToken0 ?? authProvider.GetAccessToken().Result;       // Request a token to sign in the user
 
-    // Initialize Graph client
     GraphHelper.Initialize(authProvider);
 
-    // Get signed in user
     var user = GraphHelper.GetMeAsync().Result;
     Console.WriteLine($"Welcome {user?.DisplayName ?? "NUL"}!\n");
 

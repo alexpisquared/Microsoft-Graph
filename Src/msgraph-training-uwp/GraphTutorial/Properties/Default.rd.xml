@@ -5,7 +5,7 @@
 
     Runtime Directives are documented at https://go.microsoft.com/fwlink/?LinkID=391919
 
-    To fully enable reflection for App1.MyClass and all of its public/private members
+    To fully enable reflection for App1.MyClass and all of its public/members
     <Type Name="App1.MyClass" Dynamic="Required All"/>
 
     To enable dynamic creation of the specific instantiation of AppClass<T> over System.Int32

@@ -17,9 +17,9 @@ public partial class App : Application
   //   - for any Work or School accounts, use `organizations`
   //   - for any Work or School accounts, or Microsoft personal account, use `common`
   //   - for Microsoft Personal account, use consumers
-  private static readonly string ClientId = "9ba0619e-3091-40b5-99cb-c2aca4abd04e"; // <== https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps
+  static readonly string ClientId = "9ba0619e-3091-40b5-99cb-c2aca4abd04e"; // <== https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps
 
-  private static readonly string Tenant = "common";
+  static readonly string Tenant = "common";
 
-  public static IPublicClientApplication PublicClientApp { get; private set; }
+  public static IPublicClientApplication PublicClientApp { get; set; }
 }
