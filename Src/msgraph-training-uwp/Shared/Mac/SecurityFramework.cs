@@ -12,7 +12,7 @@ namespace Microsoft.Identity.Extensions.Mac
 
     internal static class SecurityFramework
     {
-        private const string SecurityFrameworkLib = "/System/Library/Frameworks/Security.framework/Security";
+        const string SecurityFrameworkLib = "/System/Library/Frameworks/Security.framework/Security";
 
         public static readonly IntPtr Handle;
         public static readonly IntPtr kSecClass;

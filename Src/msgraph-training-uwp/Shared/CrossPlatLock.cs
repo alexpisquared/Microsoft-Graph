@@ -26,7 +26,7 @@ namespace Microsoft.Identity.Client.Extensions.Web
     {
         internal const int LockfileRetryDelayDefault = 100;
         internal const int LockfileRetryCountDefault = 60000 / LockfileRetryDelayDefault;
-        private FileStream _lockFileStream;
+        FileStream _lockFileStream;
 
         /// <summary>
         /// Creates a file lock and maintains it until the lock is disposed. Any other process trying to get the lock will wait (spin waiting) until the lock is released. 

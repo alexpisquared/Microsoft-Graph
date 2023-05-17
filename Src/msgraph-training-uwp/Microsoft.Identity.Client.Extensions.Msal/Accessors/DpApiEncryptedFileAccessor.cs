@@ -8,9 +8,9 @@ namespace Microsoft.Identity.Client.Extensions.Msal
 {
     internal class DpApiEncryptedFileAccessor : ICacheAccessor
     {
-        private readonly string _cacheFilePath;
-        private readonly TraceSourceLogger _logger;
-        private readonly ICacheAccessor _unencryptedFileAccessor;
+        readonly string _cacheFilePath;
+        readonly TraceSourceLogger _logger;
+        readonly ICacheAccessor _unencryptedFileAccessor;
 
         public DpApiEncryptedFileAccessor(string cacheFilePath, TraceSourceLogger logger)
         {

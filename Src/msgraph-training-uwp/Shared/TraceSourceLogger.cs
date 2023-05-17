@@ -58,7 +58,7 @@ namespace Microsoft.Identity.Client.Extensions.Web
             Source.TraceEvent(TraceEventType.Warning, /*id*/ 0, FormatLogMessage(message));
         }
 
-        private static string FormatLogMessage(string message)
+        static string FormatLogMessage(string message)
         {
             return $"[MSAL.Extension][{DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture)}] {message}";
         }

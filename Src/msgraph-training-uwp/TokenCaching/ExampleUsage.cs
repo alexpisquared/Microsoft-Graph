@@ -10,7 +10,7 @@ namespace TokenCaching;
 /// </summary>
 public class ExampleUsage
 {
-  private const string TraceSourceName = "MSAL.Contoso.CacheExtension";
+  const string TraceSourceName = "MSAL.Contoso.CacheExtension";
 
   /// <summary>
   /// Start reading here...
@@ -30,7 +30,7 @@ public class ExampleUsage
     StoreOtherSecret();
   }
 
-  private static async Task<MsalCacheHelper> CreateCacheHelperAsync()
+  static async Task<MsalCacheHelper> CreateCacheHelperAsync()
   {
     StorageCreationProperties storageProperties;
     MsalCacheHelper cacheHelper;
@@ -71,7 +71,7 @@ public class ExampleUsage
     }
   }
 
-  private static StorageCreationProperties ConfigureSecureStorage(bool usePlaintextFileOnLinux)
+  static StorageCreationProperties ConfigureSecureStorage(bool usePlaintextFileOnLinux)
   {
     return !usePlaintextFileOnLinux
       ? new StorageCreationPropertiesBuilder(
@@ -97,7 +97,7 @@ public class ExampleUsage
                          .Build();
   }
 
-  private static void StoreOtherSecret()
+  static void StoreOtherSecret()
   {
     var storageProperties = new StorageCreationPropertiesBuilder(
        Config.CacheFileName + ".other_secrets",

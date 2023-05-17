@@ -24,16 +24,16 @@ namespace Microsoft.Identity.Client.Extensions.Web
         /// <summary>
         /// default base cache path
         /// </summary>
-        private static readonly string s_homeEnvVar = Environment.GetEnvironmentVariable("HOME");
-        private static readonly string s_lognameEnvVar = Environment.GetEnvironmentVariable("LOGNAME");
-        private static readonly string s_userEnvVar = Environment.GetEnvironmentVariable("USER");
-        private static readonly string s_lNameEnvVar = Environment.GetEnvironmentVariable("LNAME");
-        private static readonly string s_usernameEnvVar = Environment.GetEnvironmentVariable("USERNAME");
+        static readonly string s_homeEnvVar = Environment.GetEnvironmentVariable("HOME");
+        static readonly string s_lognameEnvVar = Environment.GetEnvironmentVariable("LOGNAME");
+        static readonly string s_userEnvVar = Environment.GetEnvironmentVariable("USER");
+        static readonly string s_lNameEnvVar = Environment.GetEnvironmentVariable("LNAME");
+        static readonly string s_usernameEnvVar = Environment.GetEnvironmentVariable("USERNAME");
 
-        private static readonly Lazy<bool> s_isMono = new Lazy<bool>(() => Type.GetType("Mono.Runtime") != null);
+        static readonly Lazy<bool> s_isMono = new Lazy<bool>(() => Type.GetType("Mono.Runtime") != null);
 
-        private static string s_processName = null;
-        private static int s_processId = default(int);
+        static string s_processName = null;
+        static int s_processId = default(int);
 
         /// <summary>
         ///  Is this a windows platform
@@ -130,7 +130,7 @@ namespace Microsoft.Identity.Client.Extensions.Web
                 : Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         }       
 
-        private static string GetUserHomeDirOnUnix()
+        static string GetUserHomeDirOnUnix()
         {
             if (SharedUtilities.IsWindowsPlatform())
             {

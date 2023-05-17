@@ -7,12 +7,8 @@ internal static class Config
   // App settings
   public static readonly string[] Scopes = new[] { "user.read" };
 
-  // Use "common" if you want to allow any "enterprise" (work or school) account AND any user account (live.com, outlook, hotmail) to log in.
-  // Use an actual tenant ID to allow only your enterprise to log in.
-  // Use "organizations" to allow only enterprise log-in, this is required for the Username / Password flow
-  public const string Authority = "https://login.microsoftonline.com/organizations";
+  public const string Authority = "https://login.microsoftonline.com/common";
 
-  // DO NOT USE THIS CLIENT ID IN YOUR APP. WE REGULARLY DELETE THEM. CREATE YOUR OWN!
   public const string ClientId = "9ba0619e-3091-40b5-99cb-c2aca4abd04e";
 
   // Cache settings

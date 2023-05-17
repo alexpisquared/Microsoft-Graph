@@ -22,10 +22,10 @@ namespace Microsoft.Identity.Client.Extensions.Msal.Accessors
         /// See https://man7.org/linux/man-pages/man2/open.2.html
         /// </summary>
         [DllImport("libc", EntryPoint = "creat", SetLastError = true)]
-        private static extern int PosixCreate([MarshalAs(UnmanagedType.LPStr)] string pathname, int mode);
+        static extern int PosixCreate([MarshalAs(UnmanagedType.LPStr)] string pathname, int mode);
 
         [DllImport("libc", EntryPoint = "chmod", SetLastError = true)]
-        private static extern int PosixChmod([MarshalAs(UnmanagedType.LPStr)] string pathname, int mode);
+        static extern int PosixChmod([MarshalAs(UnmanagedType.LPStr)] string pathname, int mode);
 
         #endregion
 
@@ -59,7 +59,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal.Accessors
         /// Based on https://stackoverflow.com/questions/45132081/file-permissions-on-linux-unix-with-net-core and on 
         /// https://github.com/NuGet/NuGet.Client/commit/d62db666c710bf95121fe8f5c6a6cbe01985456f
         /// </summary>
-        private static void WriteToNewFileWithOwnerRWPermissionsUnix(string path, byte[] data)
+        static void WriteToNewFileWithOwnerRWPermissionsUnix(string path, byte[] data)
         {
             int _0600 = Convert.ToInt32("600", 8);
 
@@ -89,7 +89,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal.Accessors
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="data"></param>
-        private static void WriteToNewFileWithOwnerRWPermissionsWindows(string filePath, byte[] data)
+        static void WriteToNewFileWithOwnerRWPermissionsWindows(string filePath, byte[] data)
         {
             FileSecurity security = new FileSecurity();
             var rights = FileSystemRights.Read | FileSystemRights.Write;

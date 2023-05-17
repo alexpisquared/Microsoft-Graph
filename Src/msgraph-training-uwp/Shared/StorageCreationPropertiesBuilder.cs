@@ -17,21 +17,21 @@ namespace Microsoft.Identity.Client.Extensions.Web
     /// </summary>
     public class StorageCreationPropertiesBuilder
     {
-        private readonly string _cacheFileName;
-        private readonly string _cacheDirectory;
-        private string _clientId;
-        private string _authority;
-        private string _macKeyChainServiceName;
-        private string _macKeyChainAccountName;
-        private string _keyringSchemaName;
-        private string _keyringCollection;
-        private string _keyringSecretLabel;
-        private KeyValuePair<string, string> _keyringAttribute1;
-        private KeyValuePair<string, string> _keyringAttribute2;
-        private int _lockRetryDelay = CrossPlatLock.LockfileRetryDelayDefault;
-        private int _lockRetryCount = CrossPlatLock.LockfileRetryCountDefault;
-        private bool _useLinuxPlaintextFallback = false;
-        private bool _usePlaintextFallback = false;
+        readonly string _cacheFileName;
+        readonly string _cacheDirectory;
+        string _clientId;
+        string _authority;
+        string _macKeyChainServiceName;
+        string _macKeyChainAccountName;
+        string _keyringSchemaName;
+        string _keyringCollection;
+        string _keyringSecretLabel;
+        KeyValuePair<string, string> _keyringAttribute1;
+        KeyValuePair<string, string> _keyringAttribute2;
+        int _lockRetryDelay = CrossPlatLock.LockfileRetryDelayDefault;
+        int _lockRetryCount = CrossPlatLock.LockfileRetryCountDefault;
+        bool _useLinuxPlaintextFallback = false;
+        bool _usePlaintextFallback = false;
 
         /// <summary>
         /// Constructs a new instance of this builder associated with the given cache file.

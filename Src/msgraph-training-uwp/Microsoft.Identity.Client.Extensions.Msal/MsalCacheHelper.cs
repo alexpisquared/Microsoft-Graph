@@ -30,7 +30,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
         /// <summary>
         /// A default logger for use if the user doesn't want to provide their own.
         /// </summary>
-        private static readonly Lazy<TraceSourceLogger> s_staticLogger = new Lazy<TraceSourceLogger>(() =>
+        static readonly Lazy<TraceSourceLogger> s_staticLogger = new Lazy<TraceSourceLogger>(() =>
         {
             return new TraceSourceLogger(EnvUtils.GetNewTraceSource(nameof(MsalCacheHelper) + "Singleton"));
         });
@@ -38,17 +38,17 @@ namespace Microsoft.Identity.Client.Extensions.Msal
         /// <summary>
         /// A lock object for serialization
         /// </summary>
-        private readonly object _lockObject = new object();
+        readonly object _lockObject = new object();
 
         /// <summary>
         /// Properties used to create storage on disk.
         /// </summary>
-        private readonly StorageCreationProperties _storageCreationProperties;
+        readonly StorageCreationProperties _storageCreationProperties;
 
         /// <summary>
         /// Holds a lock object when this helper is accessing the cache. Null otherwise.
         /// </summary>
-        internal CrossPlatLock CacheLock { get; private set; }
+        internal CrossPlatLock CacheLock { get; set; }
 
         /// <summary>
         /// Storage that handles the storing of the adal cache file on disk. Internal for testing.
@@ -58,20 +58,20 @@ namespace Microsoft.Identity.Client.Extensions.Msal
         /// <summary>
         /// Logger to log events to.
         /// </summary>
-        private readonly TraceSourceLogger _logger;
+        readonly TraceSourceLogger _logger;
 
         /// <summary>
         /// Contains a list of accounts that we know about. This is used as a 'before' list when the cache is changed on disk,
         /// so that we know which accounts were added and removed. Used when sending the <see cref="CacheChanged"/> event.
         /// </summary>
-        private HashSet<string> _knownAccountIds;
+        HashSet<string> _knownAccountIds;
 
         /// <summary>
         /// Watches a filesystem location in order to fire events when the cache on disk is changed. Internal for testing.
         /// </summary>
-        private readonly FileSystemWatcher _cacheWatcher;
+        readonly FileSystemWatcher _cacheWatcher;
 
-        private EventHandler<CacheChangedEventArgs> _cacheChangedEventHandler;
+        EventHandler<CacheChangedEventArgs> _cacheChangedEventHandler;
         /// <summary>
         /// Allows clients to listen for cache updates originating from disk.
         /// </summary>
@@ -100,7 +100,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
         /// Gets the current set of accounts in the cache by creating a new public client, and
         /// deserializing the cache into a temporary object.
         /// </summary>
-        private static async Task<HashSet<string>> GetAccountIdentifiersNoLockAsync(  // executed in a cross plat lock context
+        static async Task<HashSet<string>> GetAccountIdentifiersNoLockAsync(  // executed in a cross plat lock context
             StorageCreationProperties storageCreationProperties,
             TraceSourceLogger logger)
         {
@@ -162,7 +162,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
         /// <param name="logger">Passing null uses a default logger</param>
         /// <param name="knownAccountIds">The set of known accounts</param>
         /// <param name="cacheWatcher">Watcher for the cache file, to enable sending updated events</param>
-        private MsalCacheHelper(
+        MsalCacheHelper(
             StorageCreationProperties storageCreationProperties,
             TraceSource logger,
             HashSet<string> knownAccountIds, // only used for CacheChangedEvent
@@ -183,7 +183,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
 
 #pragma warning disable VSTHRD100 // Avoid async void methods 
 #pragma warning disable VSTHRD200 // Use "Async" suffix for async methods
-        private async void OnCacheFileChangedAsync(object sender, FileSystemEventArgs args)
+        async void OnCacheFileChangedAsync(object sender, FileSystemEventArgs args)
 #pragma warning restore VSTHRD200 // Use "Async" suffix for async methods
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
@@ -382,7 +382,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
         /// <summary>
         /// Gets a new instance of a lock for synchronizing against a cache made with the same creation properties.
         /// </summary>
-        private static CrossPlatLock CreateCrossPlatLock(StorageCreationProperties storageCreationProperties)
+        static CrossPlatLock CreateCrossPlatLock(StorageCreationProperties storageCreationProperties)
         {
             return new CrossPlatLock(
                 storageCreationProperties.CacheFilePath + ".lockfile",
@@ -486,7 +486,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
             }
         }
 
-        private void ReleaseFileLock()
+        void ReleaseFileLock()
         {
             // Get a local copy and call null before disposing because when the lock is disposed the next thread will replace CacheLock with its instance,
             // therefore we do not want to null out CacheLock after dispose since this may orphan a CacheLock.
@@ -507,13 +507,13 @@ namespace Microsoft.Identity.Client.Extensions.Msal
         }
 
         //Logs to TraceSourceLogger and Identity Logger acquired from MSAL's TokenCacheNotificationArgs
-        private void LogMessage(IIdentityLogger identityLogger, EventLogLevel level, string message)
+        void LogMessage(IIdentityLogger identityLogger, EventLogLevel level, string message)
         {
             LogMessage(identityLogger, level, message, _logger);
         }
 
         //Logs to TraceSourceLogger and Identity Logger acquired from MSAL's TokenCacheNotificationArgs
-        private static void LogMessage(IIdentityLogger identityLogger, EventLogLevel level, string message, TraceSourceLogger traceSourceLogger)
+        static void LogMessage(IIdentityLogger identityLogger, EventLogLevel level, string message, TraceSourceLogger traceSourceLogger)
         {
             message = "[Microsoft.Identity.Client.Extensions] " + message;
 

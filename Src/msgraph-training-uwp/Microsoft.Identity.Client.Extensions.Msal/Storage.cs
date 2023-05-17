@@ -17,7 +17,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
     /// <remarks>Consider using the higher level <see cref="MsalCacheHelper"/></remarks>
     public class Storage
     {
-        private readonly TraceSourceLogger _logger;
+        readonly TraceSourceLogger _logger;
 
         internal /* internal for test only */ ICacheAccessor CacheAccessor { get; }
 
@@ -33,7 +33,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
         /// <summary>
         /// A default logger for use if the user doesn't want to provide their own.
         /// </summary>
-        private static readonly Lazy<TraceSourceLogger> s_staticLogger = new Lazy<TraceSourceLogger>(() =>
+        static readonly Lazy<TraceSourceLogger> s_staticLogger = new Lazy<TraceSourceLogger>(() =>
         {
             return new TraceSourceLogger(EnvUtils.GetNewTraceSource(nameof(MsalCacheHelper) + "Singleton"));
         });
@@ -112,7 +112,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
             return new Storage(creationProperties, cacheAccessor, actualLogger);
         }
 
-        internal /* internal for test, otherwise private */ Storage(
+        internal /* internal for test, otherwise */ Storage(
             StorageCreationProperties creationProperties,
             ICacheAccessor cacheAccessor,
             TraceSourceLogger logger)

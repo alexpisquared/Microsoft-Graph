@@ -35,6 +35,6 @@ namespace Microsoft.Identity.Extensions
         /// </summary>
         public int ErrorCode { get; }
 
-        private string DebuggerDisplay => $"{Message} [0x{ErrorCode:x}]";
+        string DebuggerDisplay => $"{Message} [0x{ErrorCode:x}]";
     }
 }

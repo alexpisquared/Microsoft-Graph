@@ -10,8 +10,8 @@ namespace Microsoft.Identity.Client.Extensions.Msal
 {
     internal static class FileIOWithRetries
     {
-        private const int FileLockRetryCount = 20;
-        private const int FileLockRetryWaitInMs = 200;
+        const int FileLockRetryCount = 20;
+        const int FileLockRetryWaitInMs = 200;
 
         internal static void DeleteCacheFile(string filePath, TraceSourceLogger logger)
         {
@@ -55,7 +55,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
             }, logger);
         }
 
-        private static void EnsureParentDirectoryExists(string filePath, TraceSourceLogger logger)
+        static void EnsureParentDirectoryExists(string filePath, TraceSourceLogger logger)
         {
             string directoryForCacheFile = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directoryForCacheFile))

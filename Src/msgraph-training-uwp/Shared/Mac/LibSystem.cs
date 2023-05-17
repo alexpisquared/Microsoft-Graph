@@ -10,7 +10,7 @@ namespace Microsoft.Identity.Extensions.Mac
 {
     internal static class LibSystem
     {
-        private const string LibSystemLib = "/usr/lib/libSystem.dylib";
+        const string LibSystemLib = "/usr/lib/libSystem.dylib";
 
         [DllImport(LibSystemLib, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr dlopen(string name, int flags);

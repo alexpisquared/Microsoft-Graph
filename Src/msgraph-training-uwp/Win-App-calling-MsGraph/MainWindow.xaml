@@ -17,6 +17,7 @@
         <TextBox x:Name="ResultText" TextWrapping="Wrap" MinHeight="120" Margin="5" FontFamily="Segoe Ui"/>
         <Label Content="Token Info" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
         <TextBox x:Name="TokenInfoText" TextWrapping="Wrap" MinHeight="70" Margin="5" FontFamily="Segoe Ui"/>
+        <Image x:Name="Image1" />
       </StackPanel>
     </Grid>
   </Grid>

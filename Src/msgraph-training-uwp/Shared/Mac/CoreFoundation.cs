@@ -10,7 +10,7 @@ namespace Microsoft.Identity.Extensions.Mac
 {
     internal static class CoreFoundation
     {
-        private const string CoreFoundationFrameworkLib = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
+        const string CoreFoundationFrameworkLib = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
 
         public static readonly IntPtr Handle;
         public static readonly IntPtr kCFBooleanTrue;

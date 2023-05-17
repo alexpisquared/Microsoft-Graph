@@ -8,17 +8,17 @@ namespace Microsoft.Identity.Client.Extensions.Msal
 {
     internal class LinuxKeyringAccessor : ICacheAccessor
     {
-        private readonly TraceSourceLogger _logger;
-        private IntPtr _libsecretSchema = IntPtr.Zero;
+        readonly TraceSourceLogger _logger;
+        IntPtr _libsecretSchema = IntPtr.Zero;
 
-        private readonly string _cacheFilePath;
-        private readonly string _keyringCollection;
-        private readonly string _keyringSchemaName;
-        private readonly string _keyringSecretLabel;
-        private readonly string _attributeKey1;
-        private readonly string _attributeValue1;
-        private readonly string _attributeKey2;
-        private readonly string _attributeValue2;
+        readonly string _cacheFilePath;
+        readonly string _keyringCollection;
+        readonly string _keyringSchemaName;
+        readonly string _keyringSecretLabel;
+        readonly string _attributeKey1;
+        readonly string _attributeValue1;
+        readonly string _attributeKey2;
+        readonly string _attributeValue2;
 
         public LinuxKeyringAccessor(
             string cacheFilePath,
@@ -201,7 +201,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
         }
 
 
-        private IntPtr GetLibsecretSchema()
+        IntPtr GetLibsecretSchema()
         {
             if (_libsecretSchema == IntPtr.Zero)
             {

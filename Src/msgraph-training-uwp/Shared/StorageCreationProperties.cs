@@ -63,7 +63,7 @@ namespace Microsoft.Identity.Client.Extensions.Web
             Validate();
         }
 
-        private void Validate()
+        void Validate()
         {
             if (UseLinuxUnencryptedFallback && UseUnencryptedFallback)
             {

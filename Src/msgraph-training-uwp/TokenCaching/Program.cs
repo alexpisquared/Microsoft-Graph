@@ -14,8 +14,7 @@ class Program
 {
   static async Task Main(string[] args)
   {
-    // It's recommended to create a separate PublicClient Application for each tenant but only one CacheHelper object
-    var pca1 = CreatePublicClient("https://login.microsoftonline.com/organizations");
+    var pca1 = CreatePublicClient("https://login.microsoftonline.com/common"); // It's recommended to create a separate PublicClient Application for each tenant but only one CacheHelper object
     var cacheHelper = await CreateCacheHelperAsync().ConfigureAwait(false);
     cacheHelper.RegisterCache(pca1.UserTokenCache);
 
@@ -58,10 +57,7 @@ class Program
           case '2': // Device Code Flow                                                         // IMPORTANT: you should ALWAYS try to get a token silently first
             result = await pca1.AcquireTokenWithDeviceCode(Config.Scopes, (dcr) =>
             {
-              Console.BackgroundColor = ConsoleColor.DarkCyan;
               Console.WriteLine(dcr.Message);
-              Console.ResetColor();
-
               return Task.FromResult(1);
             }).ExecuteAsync().ConfigureAwait(false);
             DisplayResult(result);
@@ -109,8 +105,8 @@ class Program
             cacheHelper.Clear();
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            var pca2 = CreatePublicClient("https://login.microsoftonline.com/organizations");
-            var pca3 = CreatePublicClient("https://login.microsoftonline.com/organizations");
+            var pca2 = CreatePublicClient("https://login.microsoftonline.com/common");
+            var pca3 = CreatePublicClient("https://login.microsoftonline.com/common");
             cacheHelper.RegisterCache(pca2.UserTokenCache);
             cacheHelper.RegisterCache(pca3.UserTokenCache);
 
@@ -231,7 +227,7 @@ class Program
     }
   }
 
-  private static async Task<AuthenticationResult> RunRopcAndSilentAsync(      string logPrefix,      IPublicClientApplication pca)
+  static async Task<AuthenticationResult> RunRopcAndSilentAsync(      string logPrefix,      IPublicClientApplication pca)
   {
     Console.WriteLine($"{logPrefix} Acquiring token by ROPC...");
     _ = await AcquireTokenROPCAsync(pca).ConfigureAwait(false);
@@ -252,8 +248,7 @@ class Program
     return result;
   }
 
-  private static async Task<AuthenticationResult> AcquireTokenROPCAsync(
-      IPublicClientApplication pca)
+  static async Task<AuthenticationResult> AcquireTokenROPCAsync(      IPublicClientApplication pca)
   {
     return string.IsNullOrEmpty(Config.Username) ||
         string.IsNullOrEmpty(Config.Password)
@@ -266,9 +261,9 @@ class Program
         .ConfigureAwait(false);
   }
 
-  private static void DisplayResult(AuthenticationResult result)
+  static void DisplayResult(AuthenticationResult result)
   {
-    Console.ForegroundColor = ConsoleColor.Green;
+    Console.ForegroundColor = ConsoleColor.DarkGreen;
     Console.WriteLine($"Token Acquisition:  Success!");
     Console.WriteLine($"  Got a token for:  {result.Account.Username}");
     Console.WriteLine($"     Token source:  {result.AuthenticationResultMetadata.TokenSource}");
@@ -276,7 +271,7 @@ class Program
     Console.ResetColor();
   }
 
-  private static async Task<MsalCacheHelper> CreateCacheHelperAsync()
+  static async Task<MsalCacheHelper> CreateCacheHelperAsync()
   {
     StorageCreationProperties storageProperties;
 
@@ -325,7 +320,7 @@ class Program
     }
   }
 
-  private static IPublicClientApplication CreatePublicClient(string authority)
+  static IPublicClientApplication CreatePublicClient(string authority)
   {
     var appBuilder = PublicClientApplicationBuilder.Create(Config.ClientId)                                                                             
         .WithAuthority(AzureCloudInstance.AzurePublic, tenant: "common")

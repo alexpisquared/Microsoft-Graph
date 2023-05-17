@@ -95,7 +95,13 @@ public partial class MainWindow : Window
         var buffer = ms.ToArray();
         var result = Convert.ToBase64String(buffer);
         var imgDataURL = string.Format("data:image/png;base64, {0}", result);
-        //ViewBag.ImageData = imgDataURL;
+
+        var bmp = new System.Windows.Media.Imaging.BitmapImage();
+        bmp.BeginInit();
+        bmp.StreamSource = ms;
+        bmp.EndInit();
+
+        Image1.Source = bmp;
       }
       else
       {

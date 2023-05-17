@@ -12,9 +12,9 @@ namespace Microsoft.Identity.Client.Extensions.Msal
     {
         public static readonly byte[] DummyData = Encoding.UTF8.GetBytes("{}");
 
-        private readonly string _cacheFilePath;
-        private readonly TraceSourceLogger _logger;
-        private readonly bool _setOwnerOnlyPermission;
+        readonly string _cacheFilePath;
+        readonly TraceSourceLogger _logger;
+        readonly bool _setOwnerOnlyPermission;
 
         internal FileAccessor(string cacheFilePath, bool setOwnerOnlyPermissions, TraceSourceLogger logger)
         {

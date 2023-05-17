@@ -20,7 +20,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
 {
     internal class MacOSKeychain
     {
-        private readonly string _namespace;
+        readonly string _namespace;
 
         #region Constructors
 
@@ -226,14 +226,14 @@ namespace Microsoft.Identity.Client.Extensions.Msal
 
         #endregion
 
-        private static IntPtr CreateCFStringUtf8(string str)
+        static IntPtr CreateCFStringUtf8(string str)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(str);
             return CFStringCreateWithBytes(IntPtr.Zero,
                 bytes, bytes.Length, CFStringEncoding.kCFStringEncodingUTF8, false);
         }
 
-        private static MacOSKeychainCredential CreateCredentialFromAttributes(IntPtr attributes)
+        static MacOSKeychainCredential CreateCredentialFromAttributes(IntPtr attributes)
         {
             string service = GetStringAttribute(attributes, kSecAttrService);
             string account = GetStringAttribute(attributes, kSecAttrAccount);
@@ -242,7 +242,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
             return new MacOSKeychainCredential(service, account, password, label);
         }
 
-        private static byte[] GetByteArrayAtrribute(IntPtr dict, IntPtr key)
+        static byte[] GetByteArrayAtrribute(IntPtr dict, IntPtr key)
         {
             if (dict == IntPtr.Zero)
             {
@@ -268,7 +268,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
             return null;
         }
 
-        private static string GetStringAttribute(IntPtr dict, IntPtr key)
+        static string GetStringAttribute(IntPtr dict, IntPtr key)
         {
             if (dict == IntPtr.Zero)
             {
@@ -313,7 +313,7 @@ namespace Microsoft.Identity.Client.Extensions.Msal
             return null;
         }
 
-        private string CreateServiceName(string service)
+        string CreateServiceName(string service)
         {
             var sb = new StringBuilder();
             if (!string.IsNullOrWhiteSpace(_namespace))

@@ -23,6 +23,6 @@ namespace Microsoft.Identity.Extensions.Mac
 
         public byte[] Password { get; }
 
-        private string DebuggerDisplay => $"{Label} [Service: {Service}, Account: {Account}]";
+        string DebuggerDisplay => $"{Label} [Service: {Service}, Account: {Account}]";
     }
 }

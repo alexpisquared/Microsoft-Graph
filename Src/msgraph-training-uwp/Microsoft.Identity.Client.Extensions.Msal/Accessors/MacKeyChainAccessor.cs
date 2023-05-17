@@ -12,12 +12,12 @@ namespace Microsoft.Identity.Client.Extensions.Msal
     /// </summary>
     internal class MacKeychainAccessor : ICacheAccessor
     {
-        private readonly string _cacheFilePath;
-        private readonly string _service;
-        private readonly string _account;
-        private readonly TraceSourceLogger _logger;
+        readonly string _cacheFilePath;
+        readonly string _service;
+        readonly string _account;
+        readonly TraceSourceLogger _logger;
 
-        private readonly MacOSKeychain _keyChain;
+        readonly MacOSKeychain _keyChain;
 
         public MacKeychainAccessor(string cacheFilePath, string keyChainServiceName, string keyChainAccountName, TraceSourceLogger logger)
         {
