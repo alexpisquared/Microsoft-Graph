@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <!--This should be passed from the VSTS build-->
+    <ClientSemVer Condition="'$(ClientSemVer)' == ''">2.0.0-localbuild</ClientSemVer>
+    <!--This will generate AssemblyVersion, AssemblyFileVersion and AssemblyInformationVersion-->
+    <Version>$(ClientSemVer)</Version>
+
+    <TargetFramework>net7.0</TargetFramework>
+    <!--<TargetFrameworks>$(DesktopTargetFrameworks)</TargetFrameworks>-->
+    <DefineConstants>$(DefineConstants);MSAL</DefineConstants>
+    <Authors>Microsoft</Authors>
+    <Company>Microsoft</Company>
+    <Description>This package contains extensions to Microsoft Authentication Library for .NET (MSAL.NET)</Description>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AzureAD/microsoft-authentication-extensions-for-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AzureAD/microsoft-authentication-extensions-for-dotnet</RepositoryUrl>
+    <PackageTags>Microsoft Authentication Library MSAL Azure Active Directory AAD Identity .NET</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Source Link">
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <PropertyGroup Label="For CI build" Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <Import Project="..\Shared\Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.54.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == '$(TargetFrameworkNetDesktop)'">
+    <Reference Include="System.Security" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == '$(TargetFrameworkNetCore)' or '$(TargetFramework)' == '$(TargetFrameworkNetStandard)'">
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.5.0" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Build Tools" Condition="$([MSBuild]::IsOsPlatform('Windows'))">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+</Project>
