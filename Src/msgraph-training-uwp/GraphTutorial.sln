@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphTutorialConsole2", "GraphTutorialConsole2\GraphTutorialConsole2.csproj", "{38D08DE4-3D98-44DF-B017-700309F3F823}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsalNetExt", "MsalNetExt", "{1558B096-0ED1-4E5D-98E2-BF432F53A96D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TokenCaching", "TokenCaching", "{1558B096-0ED1-4E5D-98E2-BF432F53A96D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenCaching", "TokenCaching\TokenCaching.csproj", "{D092F5DA-260C-4A27-AAFD-BD4A6C477C07}"
 EndProject
