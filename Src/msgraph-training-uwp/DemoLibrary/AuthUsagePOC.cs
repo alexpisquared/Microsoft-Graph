@@ -5,7 +5,7 @@ using Microsoft.Identity.Client.Extensions.Msal;
 namespace DemoLibrary;
 public class AuthUsagePOC
 {
-  public async Task<(bool success, string report)> LogInAsync()
+  public async Task<(bool success, string report, AuthenticationResult? result)> LogInAsync()
   {
     try
     {
@@ -37,13 +37,13 @@ public class AuthUsagePOC
               .WithPrompt(Prompt.SelectAccount)
               .ExecuteAsync();
         }
-        catch (MsalException msalex) { return (false, $"Error Acquiring Token:   {msalex}"); }
+        catch (MsalException msalex) { return (false, $"Error Acquiring Token:   {msalex}", null); }
       }
-      catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}"); }
+      catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}", null); }
 
-      return (true, DisplayResult(result));
+      return (true, DisplayResult(result), result);
     }
-    catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}"); }
+    catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}", null); }
   }
 
   string DisplayResult(AuthenticationResult result)
