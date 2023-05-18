@@ -41,12 +41,12 @@ public partial class MainWindow : Window
     var me = await graphServiceClient.Me.Request().GetAsync();
     try
     {
-      Image1.Source = GetBipmapFromStream(await graphServiceClient.Me.Photo.Content.Request().GetAsync());
-      Image2.Source = GetBipmapFromStream(await graphServiceClient.Drive.Root.ItemWithPath(pic).Content.Request().GetAsync());
+      Image1.Source = await GetBipmapFromStream(await graphServiceClient.Me.Photo.Content.Request().GetAsync());
+      Image2.Source = await GetBipmapFromStream(await graphServiceClient.Drive.Root.ItemWithPath(pic).Content.Request().GetAsync());
       var stream =( (await graphServiceClient.Drive.Root.ItemWithPath(vid).Content.Request().GetAsync()));
 
       var ms = new MemoryStream();
-      stream.CopyTo(ms);
+      await stream.CopyToAsync(ms);
       Play_Clicked(ms);
 
       var driveItem1 = await graphServiceClient.Drive.Root.Request().Expand(thm).GetAsync();
@@ -72,12 +72,12 @@ public partial class MainWindow : Window
   }
 
 
-  static BitmapImage GetBipmapFromStream(Stream? stream)
+  static async Task<BitmapImage> GetBipmapFromStream(Stream? stream)
   {
     ArgumentNullException.ThrowIfNull(stream, nameof(stream));
 
     var ms = new MemoryStream();
-    stream.CopyTo(ms);
+   await stream.CopyToAsync(ms);
 
     var bmp = new System.Windows.Media.Imaging.BitmapImage();
     bmp.BeginInit();

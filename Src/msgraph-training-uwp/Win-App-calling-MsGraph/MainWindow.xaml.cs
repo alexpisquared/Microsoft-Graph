@@ -91,7 +91,7 @@ public partial class MainWindow : Window
       if (profilePhoto != null)
       {
         var ms = new MemoryStream();
-        profilePhoto.CopyTo(ms);
+        await profilePhoto.CopyToAsync(ms);
         var buffer = ms.ToArray();
         var result = Convert.ToBase64String(buffer);
         var imgDataURL = string.Format("data:image/png;base64, {0}", result);
