@@ -12,7 +12,7 @@
     </Grid.ColumnDefinitions>
     <Image         Grid.Column="1" x:Name="Image1" />
     <Image         Grid.Column="2" x:Name="Image2" />
-    <vlc:VideoView Grid.Column="3" x:Name="Image3" />
+    <vlc:VideoView Grid.Column="3" x:Name="Image3" Background="#555" />
     <MediaElement  Grid.Column="4" x:Name="Image4" />
 
     <TextBlock    x:Name="Report1" d:Text="12323" Grid.ColumnSpan="2" />
