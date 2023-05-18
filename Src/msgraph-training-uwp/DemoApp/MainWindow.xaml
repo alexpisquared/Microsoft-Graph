@@ -2,7 +2,14 @@
         xmlns:local="clr-namespace:DemoApp"
         Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
   <Grid>
-    <Image x:Name="Image1" />
-    <TextBlock x:Name="Report1" d:Text="12323" />
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="10"/>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="10"/>
+    </Grid.ColumnDefinitions>
+    <Image x:Name="Image1" Grid.Column="1" />
+    <Image x:Name="Image2" Grid.Column="2" />
+    <TextBlock x:Name="Report1" d:Text="12323" Grid.ColumnSpan="2" />
   </Grid>
 </Window>

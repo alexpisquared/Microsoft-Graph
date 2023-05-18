@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using DemoLibrary;
 using Microsoft.Graph;
 
@@ -25,39 +26,40 @@ public partial class MainWindow : Window
 
   async Task TryOneDriveMeThingy(string token)
   {
-    var _graphServiceClient = new GraphServiceClient(new DelegateAuthenticationProvider(async (requestMessage) =>
+    var graphServiceClient = new GraphServiceClient(new DelegateAuthenticationProvider(async (requestMessage) =>
     {
       requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
       await Task.CompletedTask;
     }));
 
-    var me = await _graphServiceClient.Me.Request().GetAsync();
+    var me = await graphServiceClient.Me.Request().GetAsync();
     try
     {
-      var folder = await _graphServiceClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
-      var folde2 = await _graphServiceClient.Drive.Root.ItemWithPath("/" + "Pictures").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      Image1.Source = GetBipmapFromStream(await graphServiceClient.Me.Photo.Content.Request().GetAsync());
+      Image2.Source = GetBipmapFromStream(await graphServiceClient.Drive.Root.ItemWithPath("/Pictures/2017-02/wp_ss_20170223_0002.png").Content.Request().GetAsync());
 
-      var iems = await _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
-      var pic0 = iems.ToList()[12];
-      //var pic1 = pic0.Name;
+      var driveItem1 = await graphServiceClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      var driveItem2 = await graphServiceClient.Drive.Root.ItemWithPath("/Pictures").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      var driveItem3 = await graphServiceClient.Drive.Root.ItemWithPath("/Pictures/2017-02/wp_ss_20170223_0002.png").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
 
-      var profilePhoto = await _graphServiceClient.Me.Photo.Content.Request().GetAsync();
-      if (profilePhoto != null)
-      {
-        var ms = new MemoryStream();
-        profilePhoto.CopyTo(ms);
-        var buffer = ms.ToArray();
-        var result = Convert.ToBase64String(buffer);
-        var imgDataURL = string.Format("data:image/png;base64, {0}", result);
-
-        var bmp = new System.Windows.Media.Imaging.BitmapImage();
-        bmp.BeginInit();
-        bmp.StreamSource = ms;
-        bmp.EndInit();
-
-        Image1.Source = bmp;
-      }
+      var items = await graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
+      var folderDetails = items.ToList()[12].Folder;
     }
     catch (Exception ex) { Report1.Text = ex.Message; }
+  }
+
+  static BitmapImage GetBipmapFromStream(Stream? stream)
+  {
+    ArgumentNullException.ThrowIfNull(stream, nameof(stream));
+
+    var ms = new MemoryStream();
+    stream.CopyTo(ms);
+
+    var bmp = new System.Windows.Media.Imaging.BitmapImage();
+    bmp.BeginInit();
+    bmp.StreamSource = ms;
+    bmp.EndInit();
+
+    return bmp;
   }
 }
