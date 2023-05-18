@@ -62,5 +62,6 @@ Also See:
       Your registration was successful! Thanks for registering your app. We configured the client ID in the code sample.
       App name Graph .NET quick start
       Client ID 4a3fe902-51ea-40ed-8ce2-8666f68ad88f
+      ==> still not the latest ver: 4... not 5... which is a breaking change for 4...
 
 
