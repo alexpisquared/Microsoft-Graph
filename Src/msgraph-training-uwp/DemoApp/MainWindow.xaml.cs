@@ -54,7 +54,7 @@ public partial class MainWindow : Window
       var driveItem3 = await graphServiceClient.Drive.Root.ItemWithPath(pic).Request().Expand(thm).GetAsync();
       var driveItem4 = await graphServiceClient.Drive.Root.ItemWithPath(vid).Request().Expand(thm).GetAsync();
 
-      Image3.Source =new Uri( driveItem4.WebUrl); // Image3.Source = new Uri("https://onedrive.live.com/?authkey=undefined&cid=869AFB15787C9269&id=869AFB15787C9269%211118450&parId=869AFB15787C9269%21930167&o=OneUp");
+      Image4.Source =new Uri( driveItem4.WebUrl); // Image3.Source = new Uri("https://onedrive.live.com/?authkey=undefined&cid=869AFB15787C9269&id=869AFB15787C9269%211118450&parId=869AFB15787C9269%21930167&o=OneUp");
 
       var items = await graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
       var folderDetails = items.ToList()[12].Folder;
@@ -65,10 +65,10 @@ public partial class MainWindow : Window
   private void Play_Clicked(MemoryStream ms)
   {
     var _libVLC = new LibVLC();
-    var mp = new LibVLCSharp.Shared.MediaPlayer(_libVLC);
+    Image3.MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(_libVLC);
     var tt = new Media(_libVLC, new StreamMediaInput(ms)); // new Media(_libVLC, "https://streams.videolan.org/streams/360/eagle_360.mp4", FromType.FromLocation);
 
-    _ = mp.Play(tt);
+    _ = Image3.MediaPlayer.Play(tt);
   }
 
 
