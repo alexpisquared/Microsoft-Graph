@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using DemoLibrary;
@@ -32,15 +33,20 @@ public partial class MainWindow : Window
       await Task.CompletedTask;
     }));
 
+    var pic = "/Pictures/2017-02/wp_ss_20170223_0002.png";
+    var vid = "/Pictures/2016-07/WP_20160710_12_43_38_Pro.mp4";
+    var thm = "thumbnails,children($expand=thumbnails)";
+
     var me = await graphServiceClient.Me.Request().GetAsync();
     try
     {
       Image1.Source = GetBipmapFromStream(await graphServiceClient.Me.Photo.Content.Request().GetAsync());
-      Image2.Source = GetBipmapFromStream(await graphServiceClient.Drive.Root.ItemWithPath("/Pictures/2017-02/wp_ss_20170223_0002.png").Content.Request().GetAsync());
+      Image2.Source = GetBipmapFromStream(await graphServiceClient.Drive.Root.ItemWithPath(pic).Content.Request().GetAsync());
+      //Image3.Source =( (await graphServiceClient.Drive.Root.ItemWithPath(vid).Content.Request().GetAsync()));
 
-      var driveItem1 = await graphServiceClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
-      var driveItem2 = await graphServiceClient.Drive.Root.ItemWithPath("/Pictures").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
-      var driveItem3 = await graphServiceClient.Drive.Root.ItemWithPath("/Pictures/2017-02/wp_ss_20170223_0002.png").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      var driveItem1 = await graphServiceClient.Drive.Root.Request().Expand(thm).GetAsync();
+      var driveItem2 = await graphServiceClient.Drive.Root.ItemWithPath("/Pictures").Request().Expand(thm).GetAsync();
+      var driveItem3 = await graphServiceClient.Drive.Root.ItemWithPath(pic).Request().Expand(thm).GetAsync();
 
       var items = await graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
       var folderDetails = items.ToList()[12].Folder;
