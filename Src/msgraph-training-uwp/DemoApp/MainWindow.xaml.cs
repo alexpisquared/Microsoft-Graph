@@ -47,6 +47,9 @@ public partial class MainWindow : Window
       var driveItem1 = await graphServiceClient.Drive.Root.Request().Expand(thm).GetAsync();
       var driveItem2 = await graphServiceClient.Drive.Root.ItemWithPath("/Pictures").Request().Expand(thm).GetAsync();
       var driveItem3 = await graphServiceClient.Drive.Root.ItemWithPath(pic).Request().Expand(thm).GetAsync();
+      var driveItem4 = await graphServiceClient.Drive.Root.ItemWithPath(vid).Request().Expand(thm).GetAsync();
+
+      Image3.Source =new Uri( driveItem4.WebUrl); // Image3.Source = new Uri("https://onedrive.live.com/?authkey=undefined&cid=869AFB15787C9269&id=869AFB15787C9269%211118450&parId=869AFB15787C9269%21930167&o=OneUp");
 
       var items = await graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
       var folderDetails = items.ToList()[12].Folder;
