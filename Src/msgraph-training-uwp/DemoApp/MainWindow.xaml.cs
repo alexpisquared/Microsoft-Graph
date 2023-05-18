@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using DemoLibrary;
 using LibVLCSharp.Shared;
 using Microsoft.Graph;
+using StandardLib.Helpers;
 
 namespace DemoApp;
 public partial class MainWindow : Window
@@ -34,16 +35,25 @@ public partial class MainWindow : Window
       await Task.CompletedTask;
     }));
 
+    var wildcard = "*.mp4";
+    var stopwatch = Stopwatch.GetTimestamp();
+    var _allFiles = await OneDrive.GetFileNamesAsync(wildcard);
+    Trace.WriteLine($"** {_allFiles.Length,8:N0} {wildcard} files in {Stopwatch.GetElapsedTime(stopwatch).TotalSeconds,5:N1} sec.");
+
+
+    var pi2 = _allFiles[0].Substring(OneDrive.Root.Length);//.Replace("","");
     var pic = "/Pictures/2017-02/wp_ss_20170223_0002.png";
-    var vid = "/Pictures/2016-07/WP_20160710_12_43_38_Pro.mp4";
+    var vi = "/Pictures/2016-07/WP_20160710_12_43_38_Pro.mp4";
     var thm = "thumbnails,children($expand=thumbnails)";
+    var vid = _allFiles[0].Substring(OneDrive.Root.Length);//.Replace("","");
+
 
     var me = await graphServiceClient.Me.Request().GetAsync();
     try
     {
       Image1.Source = await GetBipmapFromStream(await graphServiceClient.Me.Photo.Content.Request().GetAsync());
       Image2.Source = await GetBipmapFromStream(await graphServiceClient.Drive.Root.ItemWithPath(pic).Content.Request().GetAsync());
-      var stream =( (await graphServiceClient.Drive.Root.ItemWithPath(vid).Content.Request().GetAsync()));
+      var stream = ((await graphServiceClient.Drive.Root.ItemWithPath(vid).Content.Request().GetAsync()));
 
       var ms = new MemoryStream();
       await stream.CopyToAsync(ms);
@@ -54,7 +64,7 @@ public partial class MainWindow : Window
       var driveItem3 = await graphServiceClient.Drive.Root.ItemWithPath(pic).Request().Expand(thm).GetAsync();
       var driveItem4 = await graphServiceClient.Drive.Root.ItemWithPath(vid).Request().Expand(thm).GetAsync();
 
-      Image4.Source =new Uri( driveItem4.WebUrl); // Image3.Source = new Uri("https://onedrive.live.com/?authkey=undefined&cid=869AFB15787C9269&id=869AFB15787C9269%211118450&parId=869AFB15787C9269%21930167&o=OneUp");
+      Image4.Source = new Uri(driveItem4.WebUrl); // Image3.Source = new Uri("https://onedrive.live.com/?authkey=undefined&cid=869AFB15787C9269&id=869AFB15787C9269%211118450&parId=869AFB15787C9269%21930167&o=OneUp");
 
       var items = await graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
       var folderDetails = items.ToList()[12].Folder;
@@ -71,13 +81,12 @@ public partial class MainWindow : Window
     _ = Image3.MediaPlayer.Play(tt);
   }
 
-
   static async Task<BitmapImage> GetBipmapFromStream(Stream? stream)
   {
     ArgumentNullException.ThrowIfNull(stream, nameof(stream));
 
     var ms = new MemoryStream();
-   await stream.CopyToAsync(ms);
+    await stream.CopyToAsync(ms);
 
     var bmp = new System.Windows.Media.Imaging.BitmapImage();
     bmp.BeginInit();
@@ -86,4 +95,6 @@ public partial class MainWindow : Window
 
     return bmp;
   }
+
+  void OnClose(object sender, RoutedEventArgs e) => Close();
 }

@@ -10,6 +10,10 @@
       <ColumnDefinition Width="*"/>
       <ColumnDefinition Width="10"/>
     </Grid.ColumnDefinitions>
+
+    <Button IsCancel="True" Click="OnClose" />
+
+
     <Image         Grid.Column="1" x:Name="Image1" />
     <Image         Grid.Column="2" x:Name="Image2" />
     <vlc:VideoView Grid.Column="3" x:Name="Image3" Background="#555" />
