@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using DemoLibrary;
+using LibVLCSharp.Shared;
 using Microsoft.Graph;
 
 namespace DemoApp;
@@ -42,7 +43,11 @@ public partial class MainWindow : Window
     {
       Image1.Source = GetBipmapFromStream(await graphServiceClient.Me.Photo.Content.Request().GetAsync());
       Image2.Source = GetBipmapFromStream(await graphServiceClient.Drive.Root.ItemWithPath(pic).Content.Request().GetAsync());
-      //Image3.Source =( (await graphServiceClient.Drive.Root.ItemWithPath(vid).Content.Request().GetAsync()));
+      var stream =( (await graphServiceClient.Drive.Root.ItemWithPath(vid).Content.Request().GetAsync()));
+
+      var ms = new MemoryStream();
+      stream.CopyTo(ms);
+      Play_Clicked(ms);
 
       var driveItem1 = await graphServiceClient.Drive.Root.Request().Expand(thm).GetAsync();
       var driveItem2 = await graphServiceClient.Drive.Root.ItemWithPath("/Pictures").Request().Expand(thm).GetAsync();
@@ -56,6 +61,16 @@ public partial class MainWindow : Window
     }
     catch (Exception ex) { Report1.Text = ex.Message; }
   }
+
+  private void Play_Clicked(MemoryStream ms)
+  {
+    var _libVLC = new LibVLC();
+    var mp = new LibVLCSharp.Shared.MediaPlayer(_libVLC);
+    var tt = new Media(_libVLC, new StreamMediaInput(ms)); // new Media(_libVLC, "https://streams.videolan.org/streams/360/eagle_360.mp4", FromType.FromLocation);
+
+    _ = mp.Play(tt);
+  }
+
 
   static BitmapImage GetBipmapFromStream(Stream? stream)
   {
