@@ -57,9 +57,10 @@ Also See:
 
 ## Next:
   ++ cache token to FS
-  -- Nuget pkg for Microsoft.Graph is too old im DEmoApp ... use https://developer.microsoft.com/en-us/graph/quick-start
-    Your registration was successful! Thanks for registering your app. We configured the client ID in the code sample.
-    App name Graph .NET quick start
-    Client ID 4a3fe902-51ea-40ed-8ce2-8666f68ad88f
+  -- Nuget pkg for Microsoft.Graph is too old im DEmoApp ... 
+    using https://developer.microsoft.com/en-us/graph/quick-start:
+      Your registration was successful! Thanks for registering your app. We configured the client ID in the code sample.
+      App name Graph .NET quick start
+      Client ID 4a3fe902-51ea-40ed-8ce2-8666f68ad88f
 
 
