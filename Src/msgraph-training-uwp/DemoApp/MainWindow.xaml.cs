@@ -15,8 +15,10 @@ using StandardLib.Helpers;
 namespace DemoApp;
 public partial class MainWindow : Window
 {
-  readonly Random rand = new(DateTime.Now.Second);
-  GraphServiceClient? graphServiceClient;
+  const string _allFilesTxt = @"C:\g\Microsoft-Graph\Src\msgraph-training-uwp\DemoApp\Stuff\AllFiles.txt", thm = "thumbnails,children($expand=thumbnails)";
+  readonly Random _random = new(DateTime.Now.Second);
+  GraphServiceClient? _graphServiceClient;
+  string[] _allFilesArray;
   readonly LibVLC _libVLC;
 
   public MainWindow()
@@ -30,16 +32,23 @@ public partial class MainWindow : Window
   {
     var (success, report, result) = await new AuthUsagePOC().LogInAsync();
 
-    Report1.Foreground = success ? Brushes.DarkGreen : Brushes.Red;
     Report1.Text = ($"{report}");
 
     ArgumentNullException.ThrowIfNull(result, nameof(result));
 
-    graphServiceClient = new GraphServiceClient(new DelegateAuthenticationProvider(async (requestMessage) =>
+    _graphServiceClient = new GraphServiceClient(new DelegateAuthenticationProvider(async (requestMessage) =>
     {
       requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", result.AccessToken);
       await Task.CompletedTask;
     }));
+
+    var start1 = Stopwatch.GetTimestamp();
+#if DEBUG
+    _allFilesArray = System.IO.File.ReadAllLines(_allFilesTxt); //
+#else
+    allFiles = await OneDrive.GetFileNamesAsync("*.*"); // System.IO.File.WriteAllLines(_allFiles, allFiles);
+#endif
+    Trace.WriteLine($"** {_allFilesArray.Length,8:N0}  files in {Stopwatch.GetElapsedTime(start1).TotalSeconds,5:N1} sec.");
 
     await TryOneDriveMeThingy();
   }
@@ -49,41 +58,45 @@ public partial class MainWindow : Window
     try
     {
       var start1 = Stopwatch.GetTimestamp();
-      var allFiles = await OneDrive.GetFileNamesAsync("*.*");
-      Trace.WriteLine($"** {allFiles.Length,8:N0}  files in {Stopwatch.GetElapsedTime(start1).TotalSeconds,5:N1} sec.");
+      var next = _random.Next(_allFilesArray.Length);
 
-      var next = rand.Next(allFiles.Length);
+      var file = _allFilesArray[next][OneDrive.Root.Length..];//.Replace("",""); = "/Pictures/2016-07/WP_20160710_12_43_38_Pro.mp4";  var pic = "/Pictures/2017-02/wp_ss_20170223_0002.png";
+                                                              //file = @"C:\Users\alexp\OneDrive\Pictures\Main\_New\2013-07-14 Lumia520\Lumia520 014.mp4"[OneDrive.Root.Length..]; //100mb
+                                                              //file = @"C:\Users\alexp\OneDrive\Pictures\Camera imports\2018-07\VID_20180610_191622.mp4"[OneDrive.Root.Length..]; //700mb takes ~1min to download on WiFi and only then starts playing.
 
-      var thm = "thumbnails,children($expand=thumbnails)";
-      var file = allFiles[next][OneDrive.Root.Length..];//.Replace("",""); = "/Pictures/2016-07/WP_20160710_12_43_38_Pro.mp4";  var pic = "/Pictures/2017-02/wp_ss_20170223_0002.png";
-      //file = @"C:\Users\alexp\OneDrive\Pictures\Main\_New\2013-07-14 Lumia520\Lumia520 014.mp4"[OneDrive.Root.Length..]; //100mb
-      //file = @"C:\Users\alexp\OneDrive\Pictures\Camera imports\2018-07\VID_20180610_191622.mp4"[OneDrive.Root.Length..]; //700mb takes ~1min to download on WiFi and only then starts playing.
+      Report2.Text = $"{file}";
 
-      ArgumentNullException.ThrowIfNull(graphServiceClient, nameof(graphServiceClient));
-      var driveItem = await graphServiceClient.Drive.Root.ItemWithPath(file).Request().Expand(thm).GetAsync();
-      Report2.Text = $"{driveItem.Name}  {driveItem.Size}";
+      ArgumentNullException.ThrowIfNull(_graphServiceClient, nameof(_graphServiceClient));
+      var driveItem = await _graphServiceClient.Drive.Root.ItemWithPath(file).Request().Expand(thm).GetAsync();
       if (driveItem.Video is not null)
       {
-        await PlayMediaStream(await graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
+        await PlayMediaStream(await _graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
       }
       if (driveItem.Image is not null)
       {
-        Image2.Source = await GetBipmapFromStream(await graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
+        Image2.Source = await GetBipmapFromStream(await _graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
       }
-
-      //var me = await graphServiceClient.Me.Request().GetAsync();
-      Image1.Source = await GetBipmapFromStream(await graphServiceClient.Me.Photo.Content.Request().GetAsync());
-
-      var driveItem1 = await graphServiceClient.Drive.Root.Request().Expand(thm).GetAsync();
-      var driveItem2 = await graphServiceClient.Drive.Root.ItemWithPath("/Pictures").Request().Expand(thm).GetAsync();
-      var driveItem4 = await graphServiceClient.Drive.Root.ItemWithPath(file).Request().Expand(thm).GetAsync();
-
-      Image4.Source = new Uri(driveItem4.WebUrl); // Image3.Source = new Uri("https://onedrive.live.com/?authkey=undefined&cid=869AFB15787C9269&id=869AFB15787C9269%211118450&parId=869AFB15787C9269%21930167&o=OneUp");
-
-      var items = await graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
-      var folderDetails = items.ToList()[12].Folder;
+      Report2.Text = $"{driveItem.Name}  {.000001*driveItem.Size,8:N2} / {Stopwatch.GetElapsedTime(start1).TotalSeconds:N1} = {.000001 * driveItem.Size/Stopwatch.GetElapsedTime(start1).TotalSeconds:N1} mb/sec.";
+      
+      //await Testingggggggg(thm, file);
     }
     catch (Exception ex) { Report4.Text = ex.Message; Trace.WriteLine($"** {ex.Message}  "); }
+  }
+
+  async Task Testingggggggg(string thm, string file)
+  {
+    ArgumentNullException.ThrowIfNull(_graphServiceClient, nameof(_graphServiceClient));
+    //var me = await graphServiceClient.Me.Request().GetAsync();
+    Image1.Source = await GetBipmapFromStream(await _graphServiceClient.Me.Photo.Content.Request().GetAsync());
+
+    var driveItem1 = await _graphServiceClient.Drive.Root.Request().Expand(thm).GetAsync();
+    var driveItem2 = await _graphServiceClient.Drive.Root.ItemWithPath("/Pictures").Request().Expand(thm).GetAsync();
+    var driveItem4 = await _graphServiceClient.Drive.Root.ItemWithPath(file).Request().Expand(thm).GetAsync();
+
+    Image4.Source = new Uri(driveItem4.WebUrl); // Image3.Source = new Uri("https://onedrive.live.com/?authkey=undefined&cid=869AFB15787C9269&id=869AFB15787C9269%211118450&parId=869AFB15787C9269%21930167&o=OneUp");
+
+    var items = await _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
+    var folderDetails = items.ToList()[12].Folder;
   }
 
   async Task PlayMediaStream(Stream stream)
