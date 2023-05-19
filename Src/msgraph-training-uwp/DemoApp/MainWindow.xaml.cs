@@ -11,15 +11,20 @@ using DemoLibrary;
 using LibVLCSharp.Shared;
 using Microsoft.Graph;
 using StandardLib.Helpers;
-using static System.Windows.Forms.AxHost;
 
 namespace DemoApp;
 public partial class MainWindow : Window
 {
   readonly Random rand = new(DateTime.Now.Second);
   GraphServiceClient? graphServiceClient;
+  readonly LibVLC _libVLC;
 
-  public MainWindow() => InitializeComponent();
+  public MainWindow()
+  {
+    InitializeComponent();
+    _libVLC = new LibVLC();
+    VideoView1.MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(_libVLC);
+  }
 
   async void Window_Loaded(object sender, RoutedEventArgs e)
   {
@@ -50,18 +55,16 @@ public partial class MainWindow : Window
       var next = rand.Next(allFiles.Length);
 
       var thm = "thumbnails,children($expand=thumbnails)";
-      var pic = "/Pictures/2017-02/wp_ss_20170223_0002.png";
-      var file = allFiles[next][OneDrive.Root.Length..];//.Replace("",""); = "/Pictures/2016-07/WP_20160710_12_43_38_Pro.mp4";
+      var file = allFiles[next][OneDrive.Root.Length..];//.Replace("",""); = "/Pictures/2016-07/WP_20160710_12_43_38_Pro.mp4";  var pic = "/Pictures/2017-02/wp_ss_20170223_0002.png";
+      //file = @"C:\Users\alexp\OneDrive\Pictures\Main\_New\2013-07-14 Lumia520\Lumia520 014.mp4"[OneDrive.Root.Length..]; //100mb
+      //file = @"C:\Users\alexp\OneDrive\Pictures\Camera imports\2018-07\VID_20180610_191622.mp4"[OneDrive.Root.Length..]; //700mb takes ~1min to download on WiFi and only then starts playing.
 
       ArgumentNullException.ThrowIfNull(graphServiceClient, nameof(graphServiceClient));
       var driveItem = await graphServiceClient.Drive.Root.ItemWithPath(file).Request().Expand(thm).GetAsync();
       Report2.Text = $"{driveItem.Name}  {driveItem.Size}";
       if (driveItem.Video is not null)
       {
-        var memoryStream = new MemoryStream();
-        var stream = await graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync();
-        await stream.CopyToAsync(memoryStream);
-        Play_Clicked(memoryStream);
+        PlayMediaStream(await graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
       }
       if (driveItem.Image is not null)
       {
@@ -73,7 +76,6 @@ public partial class MainWindow : Window
 
       var driveItem1 = await graphServiceClient.Drive.Root.Request().Expand(thm).GetAsync();
       var driveItem2 = await graphServiceClient.Drive.Root.ItemWithPath("/Pictures").Request().Expand(thm).GetAsync();
-      var driveItem3 = await graphServiceClient.Drive.Root.ItemWithPath(pic).Request().Expand(thm).GetAsync();
       var driveItem4 = await graphServiceClient.Drive.Root.ItemWithPath(file).Request().Expand(thm).GetAsync();
 
       Image4.Source = new Uri(driveItem4.WebUrl); // Image3.Source = new Uri("https://onedrive.live.com/?authkey=undefined&cid=869AFB15787C9269&id=869AFB15787C9269%211118450&parId=869AFB15787C9269%21930167&o=OneUp");
@@ -81,16 +83,14 @@ public partial class MainWindow : Window
       var items = await graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
       var folderDetails = items.ToList()[12].Folder;
     }
-    catch (Exception ex) { Report4.Text = ex.Message;      Trace.WriteLine($"** {ex.Message}  ");    }
+    catch (Exception ex) { Report4.Text = ex.Message; Trace.WriteLine($"** {ex.Message}  "); }
   }
 
-  private void Play_Clicked(MemoryStream ms)
+  void PlayMediaStream(Stream stream)
   {
-    var _libVLC = new LibVLC();
-    Image3.MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(_libVLC);
-    var tt = new Media(_libVLC, new StreamMediaInput(ms)); // new Media(_libVLC, "https://streams.videolan.org/streams/360/eagle_360.mp4", FromType.FromLocation);
+    var media = new Media(_libVLC, new StreamMediaInput(stream)); // new Media(_libVLC, "https://streams.videolan.org/streams/360/eagle_360.mp4", FromType.FromLocation);
 
-    _ = Image3.MediaPlayer.Play(tt);
+    _ = VideoView1.MediaPlayer.Play(media);
   }
 
   static async Task<BitmapImage> GetBipmapFromStream(Stream? stream)
@@ -99,7 +99,7 @@ public partial class MainWindow : Window
 
     var ms = new MemoryStream();
     await stream.CopyToAsync(ms);
-    ms.Seek(0, SeekOrigin.Begin); //tu: a fix for JPG images!!!
+    _ = ms.Seek(0, SeekOrigin.Begin); //tu: a fix for JPG images!!!
     stream.Close();
 
     var bmp = new System.Windows.Media.Imaging.BitmapImage();
