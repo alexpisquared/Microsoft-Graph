@@ -86,11 +86,13 @@ public partial class MainWindow : Window
     catch (Exception ex) { Report4.Text = ex.Message; Trace.WriteLine($"** {ex.Message}  "); }
   }
 
-  void PlayMediaStream(Stream stream)
+  async Task PlayMediaStream(Stream stream)
   {
     var media = new Media(_libVLC, new StreamMediaInput(stream)); // new Media(_libVLC, "https://streams.videolan.org/streams/360/eagle_360.mp4", FromType.FromLocation);
 
-    _ = VideoView1.MediaPlayer.Play(media);
+    _ = VideoView1.MediaPlayer?.Play(media);
+    await Task.Delay(1000);
+    VideoView1.MediaPlayer?.SeekTo(TimeSpan.FromMilliseconds(media.Duration / 2));
   }
 
   static async Task<BitmapImage> GetBipmapFromStream(Stream? stream)
