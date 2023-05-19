@@ -60,24 +60,25 @@ public partial class MainWindow : Window
       var start1 = Stopwatch.GetTimestamp();
       var next = _random.Next(_allFilesArray.Length);
 
-      var file = _allFilesArray[next][OneDrive.Root.Length..];//.Replace("",""); = "/Pictures/2016-07/WP_20160710_12_43_38_Pro.mp4";  var pic = "/Pictures/2017-02/wp_ss_20170223_0002.png";
-                                                              //file = @"C:\Users\alexp\OneDrive\Pictures\Main\_New\2013-07-14 Lumia520\Lumia520 014.mp4"[OneDrive.Root.Length..]; //100mb
-                                                              //file = @"C:\Users\alexp\OneDrive\Pictures\Camera imports\2018-07\VID_20180610_191622.mp4"[OneDrive.Root.Length..]; //700mb takes ~1min to download on WiFi and only then starts playing.
+      var file = _allFilesArray[next][(OneDrive.Root.Length - Environment.UserName.Length + 5)..];
+      //file = @"C:\Users\alexp\OneDrive\Pictures\Main\_New\2013-07-14 Lumia520\Lumia520 014.mp4"[OneDrive.Root.Length..]; //100mb
+      //file = @"C:\Users\alexp\OneDrive\Pictures\Camera imports\2018-07\VID_20180610_191622.mp4"[OneDrive.Root.Length..]; //700mb takes ~1min to download on WiFi and only then starts playing.
 
       Report2.Text = $"{file}";
 
       ArgumentNullException.ThrowIfNull(_graphServiceClient, nameof(_graphServiceClient));
       var driveItem = await _graphServiceClient.Drive.Root.ItemWithPath(file).Request().Expand(thm).GetAsync();
+      Report2.Text = $"{driveItem.Name}  {.000001 * driveItem.Size,8:N2} / _._ = _._ mb/sec.";
       if (driveItem.Video is not null)
       {
-        await PlayMediaStream(await _graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
+        await StartPlayingMediaStream(await _graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
       }
       if (driveItem.Image is not null)
       {
         Image2.Source = await GetBipmapFromStream(await _graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
       }
-      Report2.Text = $"{driveItem.Name}  {.000001*driveItem.Size,8:N2} / {Stopwatch.GetElapsedTime(start1).TotalSeconds:N1} = {.000001 * driveItem.Size/Stopwatch.GetElapsedTime(start1).TotalSeconds:N1} mb/sec.";
-      
+      Report2.Text = $"{driveItem.Name}  {.000001 * driveItem.Size,8:N2} / {Stopwatch.GetElapsedTime(start1).TotalSeconds:N1} = {.000001 * driveItem.Size / Stopwatch.GetElapsedTime(start1).TotalSeconds:N1} mb/sec.";
+
       //await Testingggggggg(thm, file);
     }
     catch (Exception ex) { Report4.Text = ex.Message; Trace.WriteLine($"** {ex.Message}  "); }
@@ -99,11 +100,11 @@ public partial class MainWindow : Window
     var folderDetails = items.ToList()[12].Folder;
   }
 
-  async Task PlayMediaStream(Stream stream)
+  async Task StartPlayingMediaStream(Stream stream)
   {
     var media = new Media(_libVLC, new StreamMediaInput(stream)); // new Media(_libVLC, "https://streams.videolan.org/streams/360/eagle_360.mp4", FromType.FromLocation);
 
-    _ = VideoView1.MediaPlayer?.Play(media);
+    _ = VideoView1.MediaPlayer?.Play(media); // non-blocking
     await Task.Delay(1000);
     VideoView1.MediaPlayer?.SeekTo(TimeSpan.FromMilliseconds(media.Duration / 2));
   }

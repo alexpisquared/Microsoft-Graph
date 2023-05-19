@@ -48,11 +48,12 @@ public class AuthUsagePOC
 
   string DisplayResult(AuthenticationResult result)
   {
-    return
-    $"    Token Acquisition:  Success! \n" +
-    $"      Got a token for:  {result.Account.Username} \n" +
-    $"         Token source:  {result.AuthenticationResultMetadata.TokenSource} \n" +
-    $"           Expires on:  {result.ExpiresOn.ToLocalTime()}     {result.AccessToken[..12]}...{result.AccessToken[^12..]} \n";
+    return $""" 
+  Got a token for:  {result.Account.Username} 
+     Token source:  {result.AuthenticationResultMetadata.TokenSource}     
+       Expires on:  {result.ExpiresOn.ToLocalTime()}     
+       {result.AccessToken[..12]}...{result.AccessToken[^12..]}
+ """;
   }
 
   async Task<MsalCacheHelper> CreateCacheHelperAsync()
