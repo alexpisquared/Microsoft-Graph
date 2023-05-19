@@ -115,7 +115,7 @@ public partial class MainWindow : Window
     }
   }
 
-  Task<string> GetAccessTokenAsync() => throw new NotImplementedException();
+  //Task<string> GetAccessTokenAsync() => throw new NotImplementedException();
 
   /// <summary>
   /// Perform an HTTP GET request to a URL using an HTTP Authorization header
@@ -123,7 +123,7 @@ public partial class MainWindow : Window
   /// <param name="url">The URL</param>
   /// <param name="token">The token</param>
   /// <returns>String containing the results of the GET operation</returns>
-  public async Task<string> GetHttpContentWithToken(string url, string token)
+  public static async Task<string> GetHttpContentWithToken(string url, string token)
   {
     var httpClient = new System.Net.Http.HttpClient();
     System.Net.Http.HttpResponseMessage response;
@@ -164,5 +164,4 @@ public partial class MainWindow : Window
       }
     }
   }
-
 }

@@ -64,7 +64,7 @@ public partial class MainWindow : Window
       Report2.Text = $"{driveItem.Name}  {driveItem.Size}";
       if (driveItem.Video is not null)
       {
-        PlayMediaStream(await graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
+        await PlayMediaStream(await graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync());
       }
       if (driveItem.Image is not null)
       {
