@@ -4,6 +4,7 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
@@ -19,14 +20,14 @@
     <Button Grid.Row="2" Grid.Column="0" IsCancel="True"  Click="OnClose" Content="X" />
     <Button Grid.Row="2" Grid.Column="5" IsDefault="True" Click="OnNext"  Content="_Next" />
 
-    <Image         Grid.Row="1" Grid.Column="1" x:Name="Image1" />
-    <Image         Grid.Row="1" Grid.Column="2" x:Name="Image2" />
-    <vlc:VideoView Grid.Row="1" Grid.Column="3" x:Name="VideoView1" Background="#555" />
-    <MediaElement  Grid.Row="1" Grid.Column="4" x:Name="Image4" />
+    <Image         Grid.Row="2" Grid.Column="1" x:Name="Image1" />
+    <Image         Grid.Row="2" Grid.Column="2" x:Name="Image2" />
+    <vlc:VideoView Grid.Row="2" Grid.Column="3" x:Name="VideoView1" Background="#555" />
+    <MediaElement  Grid.Row="2" Grid.Column="4" x:Name="Image4" />
 
     <TextBlock    x:Name="Report1" d:Text="12323" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" FontSize="16" Grid.RowSpan="2" Foreground="#fa0" />
-    <TextBlock    x:Name="Report2" d:Text="12323" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" FontSize="22" Margin="8" HorizontalAlignment="Center" Foreground="#ff0" />
-    <TextBlock    x:Name="Report3" d:Text="     " Grid.Column="3" Grid.ColumnSpan="4" Grid.Row="0" FontSize="22" />
-    <TextBlock    x:Name="Report4" d:Text="12323" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="2" FontSize="16" Margin="8" Foreground="#f88" />
+    <TextBlock    x:Name="Report3" d:Text="Loadg" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" FontSize="20" Margin="8" HorizontalAlignment="Center" Foreground="#fff" />
+    <TextBlock    x:Name="Report2" d:Text="12323" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1" FontSize="22" Margin="8" HorizontalAlignment="Center" Foreground="#ff0" />
+    <TextBlock    x:Name="Report4" d:Text="12323" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="3" FontSize="16" Margin="8" Foreground="#f88" />
   </Grid>
 </Window>
