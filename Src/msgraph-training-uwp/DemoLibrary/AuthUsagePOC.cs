@@ -46,7 +46,7 @@ public class AuthUsagePOC
     catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}", null); }
   }
 
-  string DisplayResult(AuthenticationResult result)
+  static string DisplayResult(AuthenticationResult result)
   {
     return $""" 
   Got a token for:  {result.Account.Username} 
@@ -56,7 +56,7 @@ public class AuthUsagePOC
  """;
   }
 
-  async Task<MsalCacheHelper> CreateCacheHelperAsync()
+  static async Task<MsalCacheHelper> CreateCacheHelperAsync()
   {
     try
     {

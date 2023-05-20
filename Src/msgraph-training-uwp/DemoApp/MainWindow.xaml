@@ -10,10 +10,10 @@
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="20"/>
-      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="22"/>
       <ColumnDefinition Width="3*"/>
       <ColumnDefinition Width="3*"/>
-      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="22"/>
       <ColumnDefinition Width="20"/>
     </Grid.ColumnDefinitions>
 
@@ -21,7 +21,7 @@
     <Button Grid.Row="2" Grid.Column="5" IsDefault="True" Click="OnNext"  Content="_Next" />
 
     <Image         Grid.Row="2" Grid.Column="1" x:Name="Image1" />
-    <Image         Grid.Row="2" Grid.Column="2" x:Name="Image2" />
+    <Image         Grid.Row="2" Grid.Column="2" x:Name="ImageView1" />
     <vlc:VideoView Grid.Row="2" Grid.Column="3" x:Name="VideoView1" Background="#555" />
     <MediaElement  Grid.Row="2" Grid.Column="4" x:Name="Image4" />
 

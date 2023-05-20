@@ -19,7 +19,7 @@ public partial class MainWindow : Window
   const string _allFilesTxt = @"C:\g\Microsoft-Graph\Src\msgraph-training-uwp\DemoApp\Stuff\AllFiles.txt", thm = "thumbnails,children($expand=thumbnails)";
   readonly Random _random = new(DateTime.Now.Second);
   GraphServiceClient? _graphServiceClient;
-  string[] _allFilesArray;
+  string[] _allFilesArray = Array.Empty<string>();
   readonly LibVLC _libVLC;
   const int _period = 5_000;
 
@@ -65,15 +65,12 @@ public partial class MainWindow : Window
     {
       ArgumentNullException.ThrowIfNull(_graphServiceClient, nameof(_graphServiceClient));
 
-      var next = _random.Next(_allFilesArray.Length);
-      var file = _allFilesArray[next][(OneDrive.Root.Length - Environment.UserName.Length + 5)..];
-      //file = @"C:\Users\alexp\OneDrive\Pictures\Main\_New\2013-07-14 Lumia520\Lumia520 014.mp4"[OneDrive.Root.Length..]; //100mb
-      //file = @"C:\Users\alexp\OneDrive\Pictures\Camera imports\2018-07\VID_20180610_191622.mp4"[OneDrive.Root.Length..]; //700mb takes ~1min to download on WiFi and only then starts playing.
+      var file = GetNextMediaFile();
 
       Report3.Text = $"{file}";
 
       var driveItem = await _graphServiceClient.Drive.Root.ItemWithPath(file).Request().Expand(thm).GetAsync();
-      Report3.Text = $"{.000001 * driveItem.Size,8:N2} mb    {driveItem.Name}"; // Write($"** {.000001 * driveItem.Size,8:N2} mb   sec:{Stopwatch.GetElapsedTime(start).TotalSeconds,5:N2}");
+      Report3.Text = $"{.000001 * driveItem.Size,8:N2} mb                    {driveItem.Name}"; // Write($"** {.000001 * driveItem.Size,8:N2} mb   sec:{Stopwatch.GetElapsedTime(start).TotalSeconds,5:N2}");
 
       var taskStream = _graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync();
       var taskDelay = Task.Delay(_period);
@@ -81,24 +78,44 @@ public partial class MainWindow : Window
       var start = Stopwatch.GetTimestamp();
       await Task.WhenAll(taskStream, taskDelay);
 
-      VideoView1.MediaPlayer?.Stop(); 
+      VideoView1.MediaPlayer?.Stop();
       System.Media.SystemSounds.Beep.Play();
 
       Write($"{Stopwatch.GetElapsedTime(start).TotalSeconds,8:N2}");
       if (driveItem.Video is not null)
       {
         var durationInMs = StartPlayingMediaStream(taskStream.Result);
-        Report2.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec.   {durationInMs*.001:N0} sec  {driveItem.Name}  ";
+        Report2.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    {durationInMs * .001:N0} sec    {driveItem.Name}";
+        ImageView1.Visibility = Visibility.Hidden;
+        VideoView1.Visibility = Visibility.Visible;
       }
-      if (driveItem.Image is not null)
+      else if (driveItem.Image is not null)
       {
-        Image2.Source = await GetBipmapFromStream(taskStream.Result);
-        Report2.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec.   {driveItem.Image.Width:N0}x{driveItem.Image.Height:N0} {driveItem.Name}  ";
+        ImageView1.Source = await GetBipmapFromStream(taskStream.Result);
+        Report2.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    {driveItem.Image.Width:N0}x{driveItem.Image.Height:N0}    {driveItem.Name}";
+        VideoView1.Visibility = Visibility.Hidden;
+        ImageView1.Visibility = Visibility.Visible;
       }
+      else
+        Report2.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    !!! NOT A MEDIA FILE !!!    {driveItem.Name}";
 
       Write($"  {Stopwatch.GetElapsedTime(start).TotalSeconds,5:N1} = {.000001 * driveItem.Size / Stopwatch.GetElapsedTime(start).TotalSeconds,4:N1} mb/sec.    {driveItem.Name}  \n");
     }
     catch (Exception ex) { Report4.Text = ex.Message; Trace.WriteLine($"** {ex.Message}  "); }
+  }
+  string GetNextMediaFile()
+  {
+    for (int i = 0; i < _allFilesArray.Length; i++)
+    {
+      var next = _random.Next(_allFilesArray.Length);
+      var file = _allFilesArray[next][(OneDrive.Root.Length - Environment.UserName.Length + 5)..];
+      //file = @"C:\Users\alexp\OneDrive\Pictures\Main\_New\2013-07-14 Lumia520\Lumia520 014.mp4"[OneDrive.Root.Length..]; //100mb
+      //file = @"C:\Users\alexp\OneDrive\Pictures\Camera imports\2018-07\VID_20180610_191622.mp4"[OneDrive.Root.Length..]; //700mb takes ~1min to download on WiFi and only then starts playing.
+      if (!file.EndsWith(".nar"))
+        return file;
+    }
+
+    throw new Exception("No suitable media files found ▄▀▄▀▄▀▄▀▄▀▄▀");
   }
   long StartPlayingMediaStream(Stream stream)
   {
