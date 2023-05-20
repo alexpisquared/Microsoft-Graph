@@ -10,11 +10,11 @@ class GraphHelper
     #region User-auth
     // <UserAuthConfigSnippet>
     // Settings object
-    private static Settings? _settings;
+    static Settings? _settings;
     // User auth token credential
-    private static DeviceCodeCredential? _deviceCodeCredential;
+    static DeviceCodeCredential? _deviceCodeCredential;
     // Client configured with user authentication
-    private static GraphServiceClient? _userClient;
+    static GraphServiceClient? _userClient;
 
     public static void InitializeGraphForUserAuth(Settings settings,
         Func<DeviceCodeInfo, CancellationToken, Task> deviceCodePrompt)
@@ -133,11 +133,11 @@ class GraphHelper
     #region App-only
     // <AppOnyAuthConfigSnippet>
     // App-ony auth token credential
-    private static ClientSecretCredential? _clientSecretCredential;
+    static ClientSecretCredential? _clientSecretCredential;
     // Client configured with app-only authentication
-    private static GraphServiceClient? _appClient;
+    static GraphServiceClient? _appClient;
 
-    private static void EnsureGraphForAppOnlyAuth()
+    static void EnsureGraphForAppOnlyAuth()
     {
         // Ensure settings isn't null
         _ = _settings ??

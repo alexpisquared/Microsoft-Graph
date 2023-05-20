@@ -14,7 +14,7 @@ using StandardLib.Helpers;
 using static System.Diagnostics.Trace;
 
 namespace DemoApp;
-public partial class MainWindow : Window
+public partial class MainWindow
 {
   const string _allFilesTxt = @"C:\g\Microsoft-Graph\Src\msgraph-training-uwp\DemoApp\Stuff\AllFiles.txt", thm = "thumbnails,children($expand=thumbnails)";
   readonly Random _random = new(DateTime.Now.Second);
@@ -22,6 +22,7 @@ public partial class MainWindow : Window
   string[] _allFilesArray = Array.Empty<string>();
   readonly LibVLC _libVLC;
   const int _period = 5_000;
+  int _periodCurrent = 50;
 
   public MainWindow()
   {
@@ -54,12 +55,12 @@ public partial class MainWindow : Window
 
     while (true)
     {
-      await TryOneDriveMeThingy();
+      await LoadWaitThenShowNext();
     }
     //await Testingggggggg(thm, file);
   }
 
-  async Task TryOneDriveMeThingy()
+  async Task LoadWaitThenShowNext()
   {
     try
     {
@@ -67,37 +68,46 @@ public partial class MainWindow : Window
 
       var file = GetNextMediaFile();
 
-      Report3.Text = $"{file}";
+      ReportNext.Text = $"{file}";
 
       var driveItem = await _graphServiceClient.Drive.Root.ItemWithPath(file).Request().Expand(thm).GetAsync();
-      Report3.Text = $"{.000001 * driveItem.Size,8:N2} mb                    {driveItem.Name}"; // Write($"** {.000001 * driveItem.Size,8:N2} mb   sec:{Stopwatch.GetElapsedTime(start).TotalSeconds,5:N2}");
+      ReportNext.Text = $"{.000001 * driveItem.Size,8:N2} mb                    {driveItem.Name}"; // Write($"** {.000001 * driveItem.Size,8:N2} mb   sec:{Stopwatch.GetElapsedTime(start).TotalSeconds,5:N2}");
 
-      var taskStream = _graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync();
-      var taskDelay = Task.Delay(_period);
+      if (driveItem.Video is null && driveItem.Image is null && driveItem.Photo is null)
+        return;
 
       var start = Stopwatch.GetTimestamp();
+      var taskStream = _graphServiceClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync();
+      var taskDelay = Task.Delay(_periodCurrent);
       await Task.WhenAll(taskStream, taskDelay);
+      Write($"{Stopwatch.GetElapsedTime(start).TotalSeconds,8:N2}");
 
+      _periodCurrent = _period;
       VideoView1.MediaPlayer?.Stop();
       System.Media.SystemSounds.Beep.Play();
 
-      Write($"{Stopwatch.GetElapsedTime(start).TotalSeconds,8:N2}");
       if (driveItem.Video is not null)
       {
         var durationInMs = StartPlayingMediaStream(taskStream.Result);
-        Report2.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    {durationInMs * .001:N0} sec    {driveItem.Name}";
+        ReportCrnt.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    {durationInMs * .001:N0} sec    {driveItem.Name}";
         ImageView1.Visibility = Visibility.Hidden;
         VideoView1.Visibility = Visibility.Visible;
       }
       else if (driveItem.Image is not null)
       {
         ImageView1.Source = await GetBipmapFromStream(taskStream.Result);
-        Report2.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    {driveItem.Image.Width:N0}x{driveItem.Image.Height:N0}    {driveItem.Name}";
+        ReportCrnt.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    {driveItem.Image.Width:N0}x{driveItem.Image.Height:N0}    {driveItem.Name}";
         VideoView1.Visibility = Visibility.Hidden;
         ImageView1.Visibility = Visibility.Visible;
       }
+      else if (driveItem.Photo is not null)
+      {
+        ReportCrnt.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    !!! PHOTO a new FILE !!!    {driveItem.Name}";
+      }
       else
-        Report2.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    !!! NOT A MEDIA FILE !!!    {driveItem.Name}";
+      {
+        ReportCrnt.Text = $"{.000001 * driveItem.Size,8:N2} mb  {Stopwatch.GetElapsedTime(start).TotalSeconds:N1} sec    !!! NOT A MEDIA FILE !!!    {driveItem.Name}";
+      }
 
       Write($"  {Stopwatch.GetElapsedTime(start).TotalSeconds,5:N1} = {.000001 * driveItem.Size / Stopwatch.GetElapsedTime(start).TotalSeconds,4:N1} mb/sec.    {driveItem.Name}  \n");
     }
@@ -145,7 +155,7 @@ public partial class MainWindow : Window
     return bmp;
   }
 
-  async void OnNext(object sender, RoutedEventArgs e) => await TryOneDriveMeThingy();
+  async void OnNext(object sender, RoutedEventArgs e) => await LoadWaitThenShowNext();
   void OnClose(object sender, RoutedEventArgs e) => Close();
 
   async Task Testingggggggg(string thm, string file)
@@ -162,21 +172,4 @@ public partial class MainWindow : Window
     var items = await _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
     _ = items.ToList()[12].Folder;
   }
-
-  public static async Task Main11()
-  {
-    WriteLine("\n** Main11() started");
-    var task1 = Task1();
-    var task2 = Task2();
-    var task3 = Task.Delay(3000);
-
-    task1.Start();
-    task2.Start();
-    task3.Start();
-
-    await Task.WhenAll(task1, task2, task3);
-  }
-
-  private static async Task Task1() { await Task.Delay(1000); WriteLine("Task 1 completed"); }
-  private static async Task Task2() { await Task.Delay(2000); WriteLine("Task 2 completed"); }
 }
