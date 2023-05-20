@@ -7,17 +7,16 @@
 //extern alias MSGraphBeta;
 //using GraphBeta = MSGraphBeta.Microsoft.Graph;
 
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Graph;
-//using Microsoft.Graph.Beta;
-
+//ing Microsoft.Graph.Beta;
 using Microsoft.Toolkit.Graph.Providers;
 using Microsoft.Toolkit.Uwp.UI.Controls;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using static System.Diagnostics.Trace;
 
 namespace GraphTutorial
 {
@@ -82,7 +81,7 @@ namespace GraphTutorial
       catch (ServiceException ex) { ShowNotification($"Exception getting defoltContacts: {ex.Message}"); }
 
       tbkReport.Text = report;
-      Debug.WriteLine(report);
+      WriteLine(report);
 
       base.OnNavigatedTo(e);
     }

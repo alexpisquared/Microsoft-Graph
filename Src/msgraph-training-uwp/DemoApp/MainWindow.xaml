@@ -2,7 +2,7 @@
         xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         xmlns:MSGraphSlideshow="clr-namespace:MSGraphSlideshow;assembly=MSGraphSlideshow" 
         x:Class="DemoApp.MainWindow" mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1800" Background="#555" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" Height="450" Width="800" Background="#555" WindowStartupLocation="CenterScreen">
   <Grid>
     <Button Grid.Row="2" Grid.Column="0" IsCancel="True"  Click="OnClose" Content="X" />
     <MSGraphSlideshow:MsgSlideshowUsrCtrl />

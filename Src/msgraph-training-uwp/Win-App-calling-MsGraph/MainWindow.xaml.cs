@@ -30,7 +30,7 @@ public partial class MainWindow : Window
     }
     catch (MsalUiRequiredException ex)
     {
-      Debug.WriteLine($"MsalUiRequiredException: {ex.Message}"); // A MsalUiRequiredException happened on AcquireTokenSilent. This indicates you need to call AcquireTokenInteractive to acquire a token
+      WriteLine($"MsalUiRequiredException: {ex.Message}"); // A MsalUiRequiredException happened on AcquireTokenSilent. This indicates you need to call AcquireTokenInteractive to acquire a token
 
       try
       {

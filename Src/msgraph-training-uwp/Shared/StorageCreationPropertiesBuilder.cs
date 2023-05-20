@@ -39,8 +39,7 @@ namespace Microsoft.Identity.Client.Extensions.Web
         /// <param name="cacheFileName">The name of the cache file to use when creating or opening storage.</param>
         /// <param name="cacheDirectory">The name of the directory containing the cache file.</param>
         /// <param name="clientId">The client id for the calling application</param>
-        [Obsolete("Use StorageCreationPropertiesBuilder(string, string) instead. " +
-            "If you need to consume the CacheChanged event then also use WithCacheChangedEvent(string, string)", false)]
+        [Obsolete("Use StorageCreationPropertiesBuilder(string, string) instead. If you need to consume the CacheChanged event then also use WithCacheChangedEvent(string, string)", false)]
         public StorageCreationPropertiesBuilder(string cacheFileName, string cacheDirectory, string clientId)
         {
             _cacheFileName = cacheFileName;
