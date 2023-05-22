@@ -6,7 +6,7 @@ internal static class AppSettings //
 {
   public static readonly string[] Scopes = new[] { "user.read" };
   public const string Authority = "https://login.microsoftonline.com/common";
-  public const string ClientId = "9ba0619e-3091-40b5-99cb-c2aca4abd04e";
+  public const string ClientId_perUser_now = "9ba0619e-3091-40b5-99cb-c2aca4abd04e";
 
   // Cache settings
   public static readonly string CacheDir = MsalCacheHelper.UserRootDirectory;
