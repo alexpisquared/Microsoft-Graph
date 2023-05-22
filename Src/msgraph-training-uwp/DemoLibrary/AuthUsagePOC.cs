@@ -6,17 +6,17 @@ using static System.Diagnostics.Trace;
 namespace DemoLibrary;
 public class AuthUsagePOC
 {
-  public async Task<(bool success, string report, AuthenticationResult? result)> LogInAsync()
+  public async Task<(bool success, string report, AuthenticationResult? result)> LogInAsync(string clientId)
   {
     try
     {
       // It's recommended to create a separate PublicClient Application for each tenant but only one CacheHelper object
-      var appBuilder = PublicClientApplicationBuilder.Create(AppSettings.ClientId)
+      var appBuilder = PublicClientApplicationBuilder.Create(clientId)
           .WithAuthority(AzureCloudInstance.AzurePublic, tenant: "common")
           .WithRedirectUri("http://localhost"); // make sure to register this redirect URI for the interactive login to work
       var pca1 = appBuilder.Build();
 
-      var cacheHelper = await CreateCacheHelperAsync().ConfigureAwait(false);
+      var cacheHelper = await CreateCacheHelperAsync(clientId).ConfigureAwait(false);
       cacheHelper.RegisterCache(pca1.UserTokenCache);
 
       WriteLine("    Getting all the accounts. This reads the cache.");
@@ -57,7 +57,7 @@ public class AuthUsagePOC
  """;
   }
 
-  static async Task<MsalCacheHelper> CreateCacheHelperAsync()
+  static async Task<MsalCacheHelper> CreateCacheHelperAsync(string clientId)
   {
     try
     {
@@ -72,7 +72,7 @@ public class AuthUsagePOC
           AppSettings.KeyChainServiceName,
           AppSettings.KeyChainAccountName)
         .WithCacheChangedEvent( // do NOT use unless really necessary, high perf penalty!
-          AppSettings.ClientId,
+          clientId,
           AppSettings.Authority).Build();
 
       var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties).ConfigureAwait(false);

@@ -28,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoConsoleApp", "DemoConso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoLibrary", "DemoLibrary\DemoLibrary.csproj", "{EC194BD3-BFB4-4494-8B8D-5F20EF0313A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoApp", "DemoApp\DemoApp.csproj", "{55FB061C-0761-4328-BF6B-A4171FF2CDDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSGraphSlideshowApp", "DemoApp\MSGraphSlideshowApp.csproj", "{55FB061C-0761-4328-BF6B-A4171FF2CDDE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphTutorial", "msgraph-training-dotnet\GraphTutorial\GraphTutorial.csproj", "{08E58397-A8FE-4A84-930D-14E2DD0FAFCA}"
 EndProject
