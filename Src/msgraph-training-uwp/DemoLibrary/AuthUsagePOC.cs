@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.Identity.Client;
+﻿using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Extensions.Msal;
 using static System.Diagnostics.Trace;
 
@@ -19,30 +18,30 @@ public class AuthUsagePOC
       var cacheHelper = await CreateCacheHelperAsync(clientId).ConfigureAwait(false);
       cacheHelper.RegisterCache(pca1.UserTokenCache);
 
-      WriteLine("    Getting all the accounts. This reads the cache.");
+      //tmi: WriteLine("Token Acquisition: getting all the accounts; this reads the cache...");
       var accounts = await pca1.GetAccountsAsync().ConfigureAwait(false);
 
-      AuthenticationResult result;
+      AuthenticationResult authResult;
       try
       {
-        result = await pca1.AcquireTokenSilent(AppSettings.Scopes, accounts.FirstOrDefault()).ExecuteAsync().ConfigureAwait(false); // this is expected to fail when account is null
+        authResult = await pca1.AcquireTokenSilent(AppSettings.Scopes, accounts.FirstOrDefault()).ExecuteAsync().ConfigureAwait(false); // this is expected to fail when account is null
       }
       catch (MsalUiRequiredException ex)
       {
-        WriteLine($"MsalUiRequiredException: {ex.Message}"); // A MsalUiRequiredException happened on AcquireTokenSilent. This indicates you need to call AcquireTokenInteractive to acquire a token
+        WriteLine($"Error Acquiring Token Silently ==> going interactive...    MsalUiRequiredException: {ex.Message}"); // A MsalUiRequiredException happened on AcquireTokenSilent. This indicates you need to call AcquireTokenInteractive to acquire a token
 
         try
         {
-          result = await pca1.AcquireTokenInteractive(AppSettings.Scopes)
+          authResult = await pca1.AcquireTokenInteractive(AppSettings.Scopes)
               .WithAccount(accounts.FirstOrDefault())
               .WithPrompt(Prompt.SelectAccount)
               .ExecuteAsync();
         }
-        catch (MsalException msalex) { return (false, $"Error Acquiring Token:   {msalex}", null); }
+        catch (MsalException msalex) { return (false, $"Error Acquiring Token INTERACTIVELY:   {msalex}", null); }
       }
       catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}", null); }
 
-      return (true, ReportResult(result), result);
+      return (true, ReportResult(authResult), authResult);
     }
     catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}", null); }
   }
