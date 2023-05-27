@@ -1,0 +1,15 @@
+{
+  "solution": {
+    "path": "GraphTutorial.sln",
+    "projects": [
+      "..\\..\\..\\AAV.Shared\\Src\\NetLts\\StandardContractsLib\\StandardContractsLib.csproj",
+      "..\\..\\..\\AAV.Shared\\Src\\NetLts\\StandardLib\\StandardLib.csproj",
+      "..\\..\\..\\AAV.Shared\\Src\\NetLts\\WpfUserControlLib\\WpfUserControlLib.csproj",
+      "..\\..\\..\\ScSv\\Src\\AlexPi.Scr\\MSGraphSlideshow\\MSGraphSlideshow.csproj",
+      "DemoApp\\MSGraphSlideshowApp.csproj",
+      "DemoLibrary\\DemoLibrary.csproj",
+      "Microsoft.Identity.Client.Extensions.Msal\\Microsoft.Identity.Client.Extensions.Msal.csproj",
+      "Shared\\Shared.shproj"
+    ]
+  }
+}
