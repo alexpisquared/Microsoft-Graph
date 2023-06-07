@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3BC0D227-C511-4E53-BE40-D79B6932C6E3}"
 	ProjectSection(SolutionItems) = preProject
 		ReadMe.md = ReadMe.md
+		ReadMe.Tutorials.md = ReadMe.Tutorials.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphTutorialConsole2", "GraphTutorialConsole2\GraphTutorialConsole2.csproj", "{38D08DE4-3D98-44DF-B017-700309F3F823}"
