@@ -5,6 +5,8 @@ using static System.Diagnostics.Trace;
 namespace DemoLibrary;
 public class AuthUsagePOC
 {
+  IPublicClientApplication? PublicClientApp;
+
   public async Task<(bool success, string report, AuthenticationResult? result)> LogInAsync(string clientId)
   {
     try
@@ -13,18 +15,18 @@ public class AuthUsagePOC
       var appBuilder = PublicClientApplicationBuilder.Create(clientId)
           .WithAuthority(AzureCloudInstance.AzurePublic, tenant: "common")
           .WithRedirectUri("http://localhost"); // make sure to register this redirect URI for the interactive login to work
-      var pca1 = appBuilder.Build();
+      PublicClientApp = appBuilder.Build();
 
       var cacheHelper = await CreateCacheHelperAsync(clientId).ConfigureAwait(false);
-      cacheHelper.RegisterCache(pca1.UserTokenCache);
+      cacheHelper.RegisterCache(PublicClientApp.UserTokenCache);
 
       //tmi: WriteLine("Token Acquisition: getting all the accounts; this reads the cache...");
-      var accounts = await pca1.GetAccountsAsync().ConfigureAwait(false);
+      var accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
 
       AuthenticationResult authResult;
       try
       {
-        authResult = await pca1.AcquireTokenSilent(AppSettings.Scopes, accounts.FirstOrDefault()).ExecuteAsync().ConfigureAwait(false); // this is expected to fail when account is null
+        authResult = await PublicClientApp.AcquireTokenSilent(AppSettings.Scopes, accounts.FirstOrDefault()).ExecuteAsync().ConfigureAwait(false); // this is expected to fail when account is null
       }
       catch (MsalUiRequiredException ex)
       {
@@ -32,7 +34,7 @@ public class AuthUsagePOC
 
         try
         {
-          authResult = await pca1.AcquireTokenInteractive(AppSettings.Scopes)
+          authResult = await PublicClientApp.AcquireTokenInteractive(AppSettings.Scopes)
               .WithAccount(accounts.FirstOrDefault())
               .WithPrompt(Prompt.SelectAccount)
               .ExecuteAsync();
@@ -46,6 +48,28 @@ public class AuthUsagePOC
     catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}", null); }
   }
 
+ public async Task<string> SignOut()
+  {
+    if (PublicClientApp is null) throw new InvalidOperationException("PublicClientApp is null");
+
+    var accounts = await PublicClientApp.GetAccountsAsync();
+    if (accounts.Any())
+    {
+      try
+      {
+        await PublicClientApp.RemoveAsync(accounts.FirstOrDefault());
+        return "User has signed-out";
+      }
+      catch (MsalException ex)
+      {
+        return $"Error signing-out user: {ex.Message}";
+      }
+    }
+    else
+    {
+      return "No accounts to sign-out";
+    }
+  }
   static string ReportResult(AuthenticationResult result)
   {
     return $""" 

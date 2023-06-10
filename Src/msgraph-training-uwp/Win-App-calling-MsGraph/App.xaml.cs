@@ -17,7 +17,12 @@ public partial class App : Application
   //   - for any Work or School accounts, use `organizations`
   //   - for any Work or School accounts, or Microsoft personal account, use `common`
   //   - for Microsoft Personal account, use consumers
-  static readonly string ClientId = "9ba0619e-3091-40b5-99cb-c2aca4abd04e"; // <== https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps
+  //static readonly string ClientId = "81b1c6c7-ea12-4466-841c-0c53b530330b"; // ZoeP_  // <== https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps
+  //static readonly string ClientId = "751b8b39-cde8-44e5-91e4-020f42e86e95"; // ZoePi  // Created by/fot the QuickStart WPF app   WORKS for the WPF app
+  //static readonly string ClientId = "9ba0619e-3091-40b5-99cb-c2aca4abd04e"; // nadin 
+  static readonly string ClientId = "6dc84e4e-68d0-4f11-ba48-7e468aecb270"; // jingm 
+  //static readonly string ClientId = "9ba0619e-3091-40b5-99cb-c2aca4abd04e"; // alex_  // MsgSlideshowUsrCtrl
+  //static readonly string ClientId = "195390b6-cc9c-4294-a219-369d9e4cb9fa"; // alexp  // AppRegPocFixTry
 
   static readonly string Tenant = "common";
 

@@ -32,18 +32,11 @@ For the original see C:\gh\s\msgraph-training-dotnet-core\demo\GraphTutorial
     https://developer.microsoft.com/en-us/graph/graph-explorer
     OAuth2: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-device-code
 
-
-
-## Core  Win-App-calling-MsGraph  from  https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-windows-desktop
+# Core  Win-App-calling-MsGraph  
+https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-windows-desktop
 ### .Net4 -> .Net7
-#### Option 1: Express mode
-  Step 1: https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/applicationsListBlade/quickStartType/WinDesktopQuickstartPage/sourceType/docs
-  Step 2: Register 
-    https://registeredapps.hosting.portal.azure.net/registeredapps/Content/1.0.2309.187/Quickstarts/en/WinDesktopQuickstartPage.html?clientOptimizations=undefined&l=en.en-us&trustedAuthority=https%3A%2F%2Fportal.azure.com&shellVersion=undefined#how-the-sample-works
-      Make this change for me
-##### Dead End: AD only?!?!?
-
-#### Option 2: Advanced mode  <== SUCCESS!!!  
+#### Option 1: Express  mode <== NOGO: AD only?!?!?
+#### Option 2: Advanced mode <== SUCCESS!!!  
 
 more samples: https://learn.microsoft.com/en-us/azure/active-directory/develop/sample-v2-code#desktop
 
