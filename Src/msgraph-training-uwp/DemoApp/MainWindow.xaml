@@ -8,6 +8,6 @@
   </WindowChrome.WindowChrome>
   <Grid>
     <Button Grid.Row="2" Grid.Column="0" IsCancel="True"  Click="OnClose" Content="X" />
-    <MSGraphSlideshow:MsgSlideshowUsrCtrl Background="#333" />
+    <MSGraphSlideshow:MsgSlideshowUsrCtrl Background="#333" x:Name="MsgSlideshowUsrCtrl1" />
   </Grid>
 </lnk:WindowBase>
