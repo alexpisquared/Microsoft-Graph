@@ -15,7 +15,7 @@ class ClientId
   public const string ZoePiTry2 = "751b8b39-cde8-44e5-91e4-020f42e86e95"; // Created by/fot the QuickStart WPF app   WORKS for the WPF app
   public const string NadinTry0 = "9ba0619e-3091-40b5-99cb-c2aca4abd04e"; 
   public const string JingmTry1 = "6dc84e4e-68d0-4f11-ba48-7e468aecb270"; // Try 1
-  public const string JingmTry2 = "---------68d0-4f11-ba48-7e468aecb270"; // Try 2 
+  public const string JingmTry2 = "adcdfbad-d7c4-4df6-a1ab-eca20f7eb8a5"; // Try 2 
   public const string AlexpGood = "9ba0619e-3091-40b5-99cb-c2aca4abd04e"; // MsgSlideshowUsrCtrl
   public const string AlexpTest = "195390b6-cc9c-4294-a219-369d9e4cb9fa"; // AppRegPocFixTry
 }
