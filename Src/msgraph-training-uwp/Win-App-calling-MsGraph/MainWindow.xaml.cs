@@ -52,14 +52,14 @@ public partial class MainWindow : Window
 
     ArgumentNullException.ThrowIfNull(authResult);
 
-    string token = authResult.AccessToken;
+    var token = authResult.AccessToken;
 
     ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, token);
     TokenInfoText.Text = $"Username: {authResult.Account.Username} \n Token Expires: {authResult.ExpiresOn.ToLocalTime()}";
     SignOutButton.Visibility = Visibility.Visible;
 
     await TrySimlplestTest(token);
-    await TryOneDriveMeThingy(token);
+    await TryOneDriveMePhoto(token);
   }
 
   async Task TrySimlplestTest(string token)
@@ -69,25 +69,22 @@ public partial class MainWindow : Window
     ResultText.Text = (await httpClient.GetAsync(graphAPIEndpoint)).ToString(); // Call the web API.
   }
 
-  async Task TryOneDriveMeThingy(string token)
+  async Task TryOneDriveMePhoto(string token)
   {
-    var _graphServiceClient = new GraphServiceClient(new DelegateAuthenticationProvider(async (requestMessage) =>
+    var graphClient = new GraphServiceClient(new DelegateAuthenticationProvider(async (requestMessage) =>
     {
       requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
       await Task.CompletedTask;
     }));
 
-    var me = await _graphServiceClient.Me.Request().GetAsync();
     try
     {
-      DriveItem folder = await _graphServiceClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
-      DriveItem folde2 = await _graphServiceClient.Drive.Root.ItemWithPath("/" + "Pictures").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      //var folder = await graphClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      //var folde2 = await graphClient.Drive.Root.ItemWithPath("/" + "Pictures").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      //var iems__ = await graphClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
+      //var pic000 = iems__.ToList()[12];
 
-      IDriveItemChildrenCollectionPage iems = await _graphServiceClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
-      var pic0 = iems.ToList()[12];
-      //var pic1 = pic0.Name;
-
-      var profilePhoto = await _graphServiceClient.Me.Photo.Content.Request().GetAsync();
+      var profilePhoto = await graphClient.Me.Photo.Content.Request().GetAsync();
       if (profilePhoto != null)
       {
         var ms = new MemoryStream();
@@ -102,10 +99,6 @@ public partial class MainWindow : Window
         bmp.EndInit();
 
         Image1.Source = bmp;
-      }
-      else
-      {
-        //ViewBag.ImageData = "";
       }
     }
     catch (Exception ex)
