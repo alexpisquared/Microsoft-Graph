@@ -36,6 +36,15 @@ namespace Native_UWP_V2
     //   - for any Work or School accounts, or Microsoft personal account, use common
     //   - for Microsoft Personal account, use consumers
     private const string ClientId = "4a1aa1d5-c567-49d0-ad0b-cd957a47f842";
+    /*
+4a1aa1d5-c567-49d0-ad0b-cd957a47f842
+This is from    C:\g\Microsoft-Graph\Src\msgraph-training-uwp\active-directory-dotnet-native-uwp-v2-msal3x\Native_UWP_V2\MainPage.xaml.cs
+==> APPARENTLY:  this is a well known client id for the Microsoft Graph Explorer
+==> so, replace it with your own client id everywhere it is used:
+   1.  here
+   2.  C:\g\Microsoft-Graph\Src\msgraph-training-uwp\active-directory-dotnet-native-uwp-v2-msal3x\Native_UWP_V2\MainPage.xaml.cs
+   3.  etc.
+*/
 
     private const string Tenant = "common"; // Alternatively "[Enter your tenant, as obtained from the azure portal, e.g. kko365.onmicrosoft.com]"
     private const string Authority = "https://login.microsoftonline.com/" + Tenant;
