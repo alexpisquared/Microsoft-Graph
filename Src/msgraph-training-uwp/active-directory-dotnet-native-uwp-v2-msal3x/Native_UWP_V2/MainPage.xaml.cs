@@ -35,8 +35,8 @@ namespace Native_UWP_V2
     //   - for any Work or School accounts, use organizations
     //   - for any Work or School accounts, or Microsoft personal account, use common
     //   - for Microsoft Personal account, use consumers
-    //private const string ClientId = "e11b46fd-3128-4f9f-a0a4-a06355089f2d"; // App (client) ID from  UWP-App-calling-MSGraph - NOGO
-    private const string ClientId = "4a1aa1d5-c567-49d0-ad0b-cd957a47f842"; // used to work
+    private const string ClientId = "e11b46fd-3128-4f9f-a0a4-a06355089f2d"; // App (client) ID from  UWP-App-calling-MSGraph - NOGO
+    //private const string ClientId = "4a1aa1d5-c567-49d0-ad0b-cd957a47f842"; // used to work
     /*
 4a1aa1d5-c567-49d0-ad0b-cd957a47f842    This is from    C:\g\Microsoft-Graph\Src\msgraph-training-uwp\active-directory-dotnet-native-uwp-v2-msal3x\Native_UWP_V2\MainPage.xaml.cs
 ==> APPARENTLY:  this is a well known client id for the Microsoft Graph Explorer demos
