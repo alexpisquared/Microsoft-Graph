@@ -8,8 +8,8 @@ public partial class MainWindow
   {
     InitializeComponent();
 
-    MsgSlideshowUsrCtrl1.ClientId = Win_App_calling_MsGraph.ClientId.JingmTry3;
-    MsgSlideshowUsrCtrl1.ClientNm = nameof(Win_App_calling_MsGraph.ClientId.JingmTry3);
+    MsgSlideshowUsrCtrl1.ClientId = Win_App_calling_MsGraph.ClientId.ZoePiTryC;
+    MsgSlideshowUsrCtrl1.ClientNm = nameof(Win_App_calling_MsGraph.ClientId.ZoePiTryC);
   }
 
   void OnClose(object sender, RoutedEventArgs e) => Close();
