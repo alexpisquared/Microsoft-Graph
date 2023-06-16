@@ -13,8 +13,15 @@ public class AuthUsagePOC
     {
       // It's recommended to create a separate PublicClient Application for each tenant but only one CacheHelper object
       var appBuilder = PublicClientApplicationBuilder.Create(clientId)
-          .WithAuthority(AzureCloudInstance.AzurePublic, tenant: "common")
-          .WithRedirectUri("http://localhost"); // make sure to register this redirect URI for the interactive login to work
+          //.WithAuthority("https://login.microsoftonline.com/common")
+          //.WithDefaultRedirectUri();
+            .WithAuthority(AzureCloudInstance.AzurePublic, tenant: "common")
+            .WithRedirectUri($"ms-appx-web://microsoft.aad.brokerplugin/{clientId}"); // make sure to register this redirect URI for the interactive login to work
+            //worked for alx: .WithRedirectUri("http://localhost"); // make sure to register this redirect URI for the interactive login to work
+
+      //appBuilder.WithWindowsBrokerOptions(new WindowsBrokerOptions() { HeaderText= "▄▀▄▀▄▀▄▀", ListWindowsWorkAndSchoolAccounts=false });
+      //appBuilder.WithBroker(true);
+
       PublicClientApp = appBuilder.Build();
 
       var cacheHelper = await CreateCacheHelperAsync(clientId).ConfigureAwait(false);
@@ -48,7 +55,7 @@ public class AuthUsagePOC
     catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}", null); }
   }
 
- public async Task<string> SignOut()
+  public async Task<string> SignOut()
   {
     if (PublicClientApp is null) throw new InvalidOperationException("PublicClientApp is null");
 
