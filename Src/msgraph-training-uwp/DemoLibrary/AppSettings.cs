@@ -4,8 +4,8 @@ namespace DemoLibrary;
 
 internal static class AppSettings // 
 {
-  public static readonly string[] Scopes = new[] { "user.read"//, "Files.Read"     //todo: worked on Nuc2 with this on
-                                                              }; 
+  public static readonly string[] Scopes = new[] { "user.read" }; //, "Files.Read" };     //todo: worked on Nuc2 with this on
+
   public const string Authority = "https://login.microsoftonline.com/common";
 
   // Cache settings

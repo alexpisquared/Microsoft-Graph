@@ -1,5 +1,6 @@
 ﻿namespace Win_App_calling_MsGraph
 {
+  [System.Runtime.Versioning.SupportedOSPlatform("windows")]
   class ClientId
   {
     // Below are the clientId (Application Id) of your app registration and the tenant information.
