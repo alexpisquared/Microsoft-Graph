@@ -9,15 +9,18 @@ public class AuthUsagePOC
 
   public async Task<(bool success, string report, AuthenticationResult? result)> LogInAsync(string clientId)
   {
+    if (string.IsNullOrWhiteSpace(clientId))
+      return (false, "op: check cfg flow for ClientId!!!", null);
+
     try
     {
       // It's recommended to create a separate PublicClient Application for each tenant but only one CacheHelper object
       var appBuilder = PublicClientApplicationBuilder.Create(clientId)
-          //.WithAuthority("https://login.microsoftonline.com/common")
-          //.WithDefaultRedirectUri();
+            //.WithAuthority("https://login.microsoftonline.com/common")
+            //.WithDefaultRedirectUri();
             .WithAuthority(AzureCloudInstance.AzurePublic, tenant: "common")
             .WithRedirectUri($"ms-appx-web://microsoft.aad.brokerplugin/{clientId}"); // make sure to register this redirect URI for the interactive login to work
-            //worked for alx: .WithRedirectUri("http://localhost"); // make sure to register this redirect URI for the interactive login to work
+                                                                                      //worked for alx: .WithRedirectUri("http://localhost"); // make sure to register this redirect URI for the interactive login to work
 
       //appBuilder.WithWindowsBrokerOptions(new WindowsBrokerOptions() { HeaderText= "▄▀▄▀▄▀▄▀", ListWindowsWorkAndSchoolAccounts=false });
       //appBuilder.WithBroker(true);
