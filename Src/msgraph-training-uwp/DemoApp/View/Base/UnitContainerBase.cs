@@ -2,7 +2,7 @@
 public partial class UnitContainerBase : UserControl
 {
   bool isDragging, _isResizing, _isLoaded;
-  System.Windows.Point _lastMousePosition, clickPosition;
+  Point _lastMousePosition, clickPosition;
   public static readonly DependencyProperty WindowStateProperty = DependencyProperty.Register("WindowState", typeof(bool), typeof(UnitContainerBase), new PropertyMetadata(true, propChanged)); public bool WindowState { get => (bool)GetValue(WindowStateProperty); set => SetValue(WindowStateProperty, value); }
   static async void propChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -137,14 +137,14 @@ public partial class UnitContainerBase : UserControl
       var currentPosition = e.GetPosition(this);
       var delta = currentPosition - _lastMousePosition;
       if (Width + delta.X > 0)
-      Width += delta.X;
-      //else
-      //  Width = 500;
+        Width += delta.X;
+      else
+        Width = 500;
 
       if (Height + delta.Y > 0)
-      Height += delta.Y;
-      //else
-      //  Height = 300;
+        Height += delta.Y;
+      else
+        Height = 300;
 
       _lastMousePosition = currentPosition;
     }

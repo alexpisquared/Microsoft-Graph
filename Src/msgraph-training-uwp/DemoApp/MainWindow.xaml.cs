@@ -1,7 +1,4 @@
-﻿using System.Windows;
-using MSGraphSlideshow;
-
-namespace DemoApp;
+﻿namespace DemoApp;
 public partial class MainWindow
 {
   public MainWindow()
