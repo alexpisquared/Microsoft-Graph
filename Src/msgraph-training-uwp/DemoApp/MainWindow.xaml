@@ -11,10 +11,10 @@
     <Button Grid.Row="2" Grid.Column="0" IsCancel="True"  Click="OnClose" Content="X" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="26" Background="Transparent" Foreground="#a00" />
     <!--<MSGraphSlideshow:MsgSlideshowUsrCtrl Background="#333" x:Name="MsgSlideshowUsrCtrl1" />-->
 
-    <TextBlock x:Name="tbkTitle" Text="123" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="26" Foreground="#a00" />
+    <TextBlock x:Name="tbkTitle" Text="123" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="26" Foreground="#aa0" />
     <Viewbox Stretch="Uniform" Margin="32">
-      <Canvas x:Name="canvas" Background="#4f00" Height="205" Width="400">
-        <local:UnitF1View x:Name="UnitF1_A" ClientId="{Binding ClientId}"/>
+      <Canvas x:Name="canvas" Background="#1f00" Height="205" Width="400">
+        <local:UnitF1View x:Name="UnitF1_A" ClientId="{Binding ClientId}" />
         <local:UnitF2View x:Name="UnitF2_A" />
       </Canvas>
     </Viewbox>
