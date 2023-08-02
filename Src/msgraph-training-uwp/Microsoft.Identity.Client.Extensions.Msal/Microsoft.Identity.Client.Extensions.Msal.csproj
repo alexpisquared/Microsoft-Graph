@@ -20,6 +20,7 @@
     <PackageTags>Microsoft Authentication Library MSAL Azure Active Directory AAD Identity .NET</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Label="Source Link">
