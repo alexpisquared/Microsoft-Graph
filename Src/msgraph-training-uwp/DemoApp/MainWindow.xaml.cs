@@ -5,8 +5,7 @@ public partial class MainWindow
   {
     InitializeComponent();
 
-    MsgSlideshowUsrCtrl1.ClientId = Win_App_calling_MsGraph.ClientId.AlexpGood;
-    MsgSlideshowUsrCtrl1.ClientNm = nameof(Win_App_calling_MsGraph.ClientId.AlexpGood);
+    MsgSlideshowUsrCtrl1.ClientId = Win_App_calling_MsGraph.ClientId.ZoePiTryC; // MsgSlideshowUsrCtrl1.ClientNm = nameof(Win_App_calling_MsGraph.ClientId.AlexpGood);
   }
 
   void OnClose(object sender, RoutedEventArgs e) => Close();
