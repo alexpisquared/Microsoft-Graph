@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 namespace Win_App_calling_MsGraph;
@@ -18,7 +21,7 @@ public partial class MainWindow : Window
 
   async void CallGraphButton_Click(object sender, RoutedEventArgs e)
   {
-    ResultText.Text = "";
+    ResultText.Foreground = System.Windows.Media.Brushes.Green; ResultText.Text = "";
     TokenInfoText.Text = "";
 
     var accounts = await App.PublicClientApp.GetAccountsAsync();
@@ -39,14 +42,15 @@ public partial class MainWindow : Window
             .WithPrompt(Microsoft.Identity.Client.Prompt.SelectAccount)
             .ExecuteAsync();
       }
-      catch (MsalException msalex)
+      catch (Exception msalex)
       {
-        ResultText.Text = $"Error Acquiring Token:   {msalex}";
+        ResultText.Foreground = System.Windows.Media.Brushes.DarkRed; ResultText.Text = $"Error Acquiring Token:   {msalex}";
+        return;
       }
     }
     catch (Exception ex)
     {
-      ResultText.Text = $"Error Acquiring Token Silently:   {ex}";
+      ResultText.Foreground = System.Windows.Media.Brushes.DarkRed; ResultText.Text = $"Error Acquiring Token Silently:   {ex}";
       throw;
     }
 
@@ -54,7 +58,7 @@ public partial class MainWindow : Window
 
     var token = authResult.AccessToken;
 
-    ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, token);
+    ResultText.Foreground = System.Windows.Media.Brushes.Magenta; ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, token);
     TokenInfoText.Text = $"Username: {authResult.Account.Username} \n Token Expires: {authResult.ExpiresOn.ToLocalTime()}";
     SignOutButton.Visibility = Visibility.Visible;
 
@@ -66,7 +70,7 @@ public partial class MainWindow : Window
   {
     var httpClient = new HttpClient();
     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-    ResultText.Text = (await httpClient.GetAsync(graphAPIEndpoint)).ToString(); // Call the web API.
+    ResultTex2.Text = (await httpClient.GetAsync(graphAPIEndpoint)).ToString(); // Call the web API.
   }
 
   async Task TryOneDriveMePhoto(string token)
@@ -80,9 +84,20 @@ public partial class MainWindow : Window
     try
     {
       //var folder = await graphClient.Drive.Root.Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
-      //var folde2 = await graphClient.Drive.Root.ItemWithPath("/" + "Pictures").Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
       //var iems__ = await graphClient.Me.Drive.Root.Children.Request().GetAsync(); //tu: onedrive root folder items == 16 dirs.
       //var pic000 = iems__.ToList()[12];
+
+      var file = "/Pictures/id.png";
+      var driveItem = await graphClient.Drive.Root.ItemWithPath(file).Request().Expand("thumbnails,children($expand=thumbnails)").GetAsync();
+      Debug.WriteLine($"{driveItem.Name}  {driveItem.Size}  ");
+      if (driveItem != null)
+      {
+        var taskStream = graphClient.Drive.Root.ItemWithPath(file).Content.Request().GetAsync();
+        var taskDelay = Task.Delay(111);
+        await Task.WhenAll(taskStream, taskDelay);
+
+        Image2.Source = (await GetBipmapFromStream(taskStream.Result)).bitmapImage;
+      }
 
       var profilePhoto = await graphClient.Me.Photo.Content.Request().GetAsync();
       if (profilePhoto != null)
@@ -104,9 +119,29 @@ public partial class MainWindow : Window
     catch (Exception ex)
     {
       Trace.WriteLine($"\n*** Error getting events: {ex.Message}");
-      ResultText.Text = ex.Message;
+      ResultText.Foreground = System.Windows.Media.Brushes.DarkRed; ResultText.Text = ex.Message;
     }
   }
+
+  static async Task<(BitmapImage bitmapImage, string report)> GetBipmapFromStream(Stream? stream)
+  {
+    ArgumentNullException.ThrowIfNull(stream, nameof(stream));
+
+    var memoryStream = new MemoryStream();
+    await stream.CopyToAsync(memoryStream);
+    _ = memoryStream.Seek(0, SeekOrigin.Begin); //tu: JPG images fix!!!
+    stream.Close();
+
+    var bmp = new System.Windows.Media.Imaging.BitmapImage();
+    bmp.BeginInit();
+    bmp.StreamSource = memoryStream;
+    bmp.EndInit();
+
+    await Task.Yield();
+
+    return (bmp, "++");
+  }
+
 
   //Task<string> GetAccessTokenAsync() => throw new NotImplementedException();
 
@@ -135,9 +170,6 @@ public partial class MainWindow : Window
     }
   }
 
-  /// <summary>
-  /// Sign out the current user
-  /// </summary>
   async void SignOutButton_Click(object sender, RoutedEventArgs e)
   {
     var accounts = await App.PublicClientApp.GetAccountsAsync();
@@ -147,14 +179,26 @@ public partial class MainWindow : Window
       try
       {
         await App.PublicClientApp.RemoveAsync(accounts.FirstOrDefault());
-        ResultText.Text = "User has signed-out";
+        ResultText.Foreground = System.Windows.Media.Brushes.Blue; ResultText.Text = "User has signed-out";
         CallGraphButton.Visibility = Visibility.Visible;
         SignOutButton.Visibility = Visibility.Collapsed;
+
+        Image1.Source = new BitmapImage(new Uri("pack://application:,,,/favicon.ico"));
+        Image2.Source = new BitmapImage(new Uri("pack://application:,,,/favicon.ico"));
+        Image3.Source = new BitmapImage(new Uri("pack://application:,,,/favicon.ico"));
       }
       catch (MsalException ex)
       {
-        ResultText.Text = $"Error signing-out user: {ex.Message}";
+        ResultText.Foreground = System.Windows.Media.Brushes.DarkRed; ResultText.Text = $"Error signing-out user: {ex.Message}";
       }
     }
+  }
+
+  void User_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+  {
+    if (e.AddedItems.Count < 1) return;
+
+    SignOutButton_Click(sender, e);
+    App.NewMethod(((System.Windows.FrameworkElement)e.AddedItems[0]).Tag.ToString());
   }
 }
