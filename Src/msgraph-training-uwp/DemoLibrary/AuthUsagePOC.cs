@@ -63,7 +63,7 @@ public class AuthUsagePOC
     if (PublicClientApp is null) throw new InvalidOperationException("PublicClientApp is null");
 
     var accounts = await PublicClientApp.GetAccountsAsync();
-    if (accounts.Any())
+    if (accounts?.Any() == true)
     {
       try
       {
