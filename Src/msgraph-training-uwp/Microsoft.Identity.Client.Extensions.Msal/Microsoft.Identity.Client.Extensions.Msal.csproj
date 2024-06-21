@@ -38,7 +38,7 @@
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.58.1" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
   </ItemGroup>
 
