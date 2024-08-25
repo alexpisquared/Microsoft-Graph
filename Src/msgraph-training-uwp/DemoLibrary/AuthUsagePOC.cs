@@ -19,8 +19,8 @@ public class AuthUsagePOC
             //.WithAuthority("https://login.microsoftonline.com/common")
             //.WithDefaultRedirectUri();
             .WithAuthority(AzureCloudInstance.AzurePublic, tenant: "common")
-            .WithRedirectUri($"ms-appx-web://microsoft.aad.brokerplugin/{clientId}"); // make sure to register this redirect URI for the interactive login to work
-                                                                                      //worked for alx: .WithRedirectUri("http://localhost"); // make sure to register this redirect URI for the interactive login to work
+            //.WithRedirectUri($"ms-appx-web://microsoft.aad.brokerplugin/{clientId}"); // 2024-08: expired and failed to launch the interactive login, but the http://localhost worked for alx:
+            .WithRedirectUri("http://localhost"); // make sure to register this redirect URI for the interactive login to work (at https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Authentication/appId/9ba0619e-3091-40b5-99cb-c2aca4abd04e/isMSAApp~/false)
 
       //appBuilder.WithWindowsBrokerOptions(new WindowsBrokerOptions() { HeaderText= "▄▀▄▀▄▀▄▀", ListWindowsWorkAndSchoolAccounts=false });
       //appBuilder.WithBroker(true);
@@ -40,7 +40,7 @@ public class AuthUsagePOC
       }
       catch (MsalUiRequiredException ex)
       {
-        WriteLine($"Error Acquiring Token Silently ==> going interactive...    MsalUiRequiredException: {ex.Message}"); // A MsalUiRequiredException happened on AcquireTokenSilent. This indicates you need to call AcquireTokenInteractive to acquire a token
+        WriteLine($"■ Error Acquiring Token Silently ==> going interactive...    MsalUiRequiredException:\n  {ex.Message}"); // A MsalUiRequiredException happened on AcquireTokenSilent. This indicates you need to call AcquireTokenInteractive to acquire a token
 
         try
         {
@@ -49,7 +49,11 @@ public class AuthUsagePOC
               .WithPrompt(Prompt.SelectAccount)
               .ExecuteAsync();
         }
-        catch (MsalException msalex) { return (false, $"Error Acquiring Token INTERACTIVELY:   {msalex}", null); }
+        catch (MsalException msalEx)
+        {
+          WriteLine($"■ Error Acquiring Token INTERACTIVELY:   \n  {msalEx.Message}");
+          return (false, $"■ Error Acquiring Token INTERACTIVELY:   {msalEx}", null);
+        }
       }
       catch (Exception ex) { return (false, $"Error Acquiring Token Silently:   {ex}", null); }
 
