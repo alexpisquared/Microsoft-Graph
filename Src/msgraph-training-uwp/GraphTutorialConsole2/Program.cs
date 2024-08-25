@@ -155,8 +155,7 @@ async Task SendMailAsync()
       return;
     }
 
-    await GraphHelper.SendMailAsync("Testing Microsoft Graph",
-        "Hello world!", userEmail);
+    await GraphHelper.SendMailAsync("Testing Microsoft Graph", "Hello world!\n\nFrom \n\tC:\\g\\Microsoft-Graph\\Src\\msgraph-training-uwp\\GraphTutorialConsole2\\Program.cs", userEmail);
 
     Console.WriteLine("Mail sent.");
   }
