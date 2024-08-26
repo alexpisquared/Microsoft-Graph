@@ -5,7 +5,7 @@ using static System.Diagnostics.Trace;
 namespace DemoLibrary;
 public class AuthUsagePOC
 {
-  IPublicClientApplication? PublicClientApp;
+  IPublicClientApplication? _msalClient;
 
   public async Task<(bool success, string report, AuthenticationResult? result)> LogInAsync(string clientId)
   {
@@ -17,26 +17,26 @@ public class AuthUsagePOC
       // It's recommended to create a separate PublicClient Application for each tenant but only one CacheHelper object
       var appBuilder = PublicClientApplicationBuilder.Create(clientId)
             //.WithAuthority("https://login.microsoftonline.com/common")
-            //.WithDefaultRedirectUri();
             .WithAuthority(AzureCloudInstance.AzurePublic, tenant: "common")
+            //.WithDefaultRedirectUri();
             //.WithRedirectUri($"ms-appx-web://microsoft.aad.brokerplugin/{clientId}"); // 2024-08: expired and failed to launch the interactive login, but the http://localhost worked for alx:
             .WithRedirectUri("http://localhost"); // make sure to register this redirect URI for the interactive login to work (at https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Authentication/appId/9ba0619e-3091-40b5-99cb-c2aca4abd04e/isMSAApp~/false)
 
       //appBuilder.WithWindowsBrokerOptions(new WindowsBrokerOptions() { HeaderText= "▄▀▄▀▄▀▄▀", ListWindowsWorkAndSchoolAccounts=false });
       //appBuilder.WithBroker(true);
 
-      PublicClientApp = appBuilder.Build();
+      _msalClient = appBuilder.Build();
 
       var cacheHelper = await CreateCacheHelperAsync(clientId).ConfigureAwait(false);
-      cacheHelper.RegisterCache(PublicClientApp.UserTokenCache);
+      cacheHelper.RegisterCache(_msalClient.UserTokenCache);
 
       //tmi: WriteLine("Token Acquisition: getting all the accounts; this reads the cache...");
-      var accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
+      var accounts = await _msalClient.GetAccountsAsync().ConfigureAwait(false);
 
       AuthenticationResult authResult;
       try
       {
-        authResult = await PublicClientApp.AcquireTokenSilent(AppSettings.Scopes, accounts.FirstOrDefault()).ExecuteAsync().ConfigureAwait(false); // this is expected to fail when account is null
+        authResult = await _msalClient.AcquireTokenSilent(AppSettings.Scopes, accounts.FirstOrDefault()).ExecuteAsync().ConfigureAwait(false); // this is expected to fail when account is null
       }
       catch (MsalUiRequiredException ex)
       {
@@ -44,7 +44,7 @@ public class AuthUsagePOC
 
         try
         {
-          authResult = await PublicClientApp.AcquireTokenInteractive(AppSettings.Scopes)
+          authResult = await _msalClient.AcquireTokenInteractive(AppSettings.Scopes)
               .WithAccount(accounts.FirstOrDefault())
               .WithPrompt(Prompt.SelectAccount)
               .ExecuteAsync();
@@ -64,14 +64,14 @@ public class AuthUsagePOC
 
   public async Task<string> SignOut()
   {
-    if (PublicClientApp is null) throw new InvalidOperationException("PublicClientApp is null");
+    if (_msalClient is null) throw new InvalidOperationException("PublicClientApp is null");
 
-    var accounts = await PublicClientApp.GetAccountsAsync();
+    var accounts = await _msalClient.GetAccountsAsync();
     if (accounts?.Any() == true)
     {
       try
       {
-        await PublicClientApp.RemoveAsync(accounts.FirstOrDefault());
+        await _msalClient.RemoveAsync(accounts.FirstOrDefault());
         return "User has signed-out";
       }
       catch (MsalException ex)
