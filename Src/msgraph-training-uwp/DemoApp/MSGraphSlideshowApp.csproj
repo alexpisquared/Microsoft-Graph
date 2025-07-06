@@ -13,12 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Graph" Version="5.56.0" />
-    <PackageReference Include="LibVLCSharp" Version="3.9.0" />
-    <PackageReference Include="LibVLCSharp.WPF" Version="3.9.0" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.20" />
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Graph" Version="5.84.0" />
+    <PackageReference Include="LibVLCSharp" Version="3.9.3" />
+    <PackageReference Include="LibVLCSharp.WPF" Version="3.9.3" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
+    <PackageReference Include="AutoMapper" Version="15.0.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
   </ItemGroup>
 
   <ItemGroup>
