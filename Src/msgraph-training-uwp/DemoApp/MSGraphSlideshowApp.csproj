@@ -25,7 +25,7 @@
     <ProjectReference Include="..\..\..\..\AAV.Shared\Src\NetLts\StandardContractsLib\StandardContractsLib.csproj" />
     <ProjectReference Include="..\..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />
     <ProjectReference Include="..\..\..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj" />
-    <ProjectReference Include="..\..\..\..\ScSv\Src\AlexPi.Scr\MSGraphSlideshow\MSGraphSlideshow.csproj" />
+    <ProjectReference Include="..\..\..\..\AAV.ScrSvr\Src\AlexPi.Scr\MSGraphSlideshow\MSGraphSlideshow.csproj" />
     <!--<ProjectReference Include="..\..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />
     <ProjectReference Include="..\DemoLibrary\DemoLibrary.csproj" />-->
   </ItemGroup>
