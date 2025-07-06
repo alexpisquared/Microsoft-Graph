@@ -20,6 +20,17 @@ try
   OK   Cancel   
   ---------------------------
 
+
+
+  ---------------------------
+  Microsoft Visual Studio
+  ---------------------------
+  Try running your application again once the script in the command window has completed. You may need to interact with the script.
+  ---------------------------
+  OK   
+  ---------------------------
+  
+
   Then it opens a browser to the WSL install page, which is not what I expected:  https://learn.microsoft.com/en-us/windows/wsl/install
   
   wsl --install
@@ -28,6 +39,9 @@ try
 
   Console.ForegroundColor = ConsoleColor.Yellow;
   Console.WriteLine("WAIT! It hangs the VS for a while ... but then comes out file");
+
+  await Task.Delay(5000);
+  return; // just to see the message above, then exit
 
   string clientId = "9ba0619e-3091-40b5-99cb-c2aca4abd04e"; 
   var rv = await new AuthUsagePOC().LogInAsync(clientId);
