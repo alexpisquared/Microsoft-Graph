@@ -17,11 +17,11 @@ class Program
 
     var authProvider = new DeviceCodeAuthProvider(appId, scopes); // Initialize the auth provider with values from appsettings.json
     var accessToken0 = appConfig["AccessToken"];
-    var accessToken = accessToken0 ?? authProvider.GetAccessToken().Result;       // Request a token to sign in the user
+    var accessToken = accessToken0 ?? authProvider.GetAccessToken().GetAwaiter().GetResult();       // Request a token to sign in the user
 
     GraphHelper.Initialize(authProvider);
 
-    var user = GraphHelper.GetMeAsync().Result;
+    var user = GraphHelper.GetMeAsync().GetAwaiter().GetResult();
     Console.WriteLine($"Welcome {user?.DisplayName ?? "NUL"}!\n");
 
     var choice = -1;
