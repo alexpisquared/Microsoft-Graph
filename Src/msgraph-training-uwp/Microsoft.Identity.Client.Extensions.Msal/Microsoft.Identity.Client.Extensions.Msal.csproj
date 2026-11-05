@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!--This should be passed from the VSTS build-->
     <ClientSemVer Condition="'$(ClientSemVer)' == ''">2.0.0-localbuild</ClientSemVer>
@@ -31,17 +31,17 @@
   </PropertyGroup>
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />
   <ItemGroup>
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.92.0" />
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Identity.Client" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == '$(TargetFrameworkNetDesktop)'">
     <Reference Include="System.Security" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == '$(TargetFrameworkNetCore)' or '$(TargetFramework)' == '$(TargetFrameworkNetStandard)'">
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.14" />
-    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" />
   </ItemGroup>
   <ItemGroup Label="Build Tools" Condition="$([MSBuild]::IsOsPlatform('Windows'))">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.403" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 </Project>
